@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+	<title>Maze - mdRwd</title>
+	<meta charset="utf-8"/>
+        <meta name="robots" content="noodp, noydir"/>
+        <meta name="apple-mobile-web-app-title" content="Maze"/>
+        <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/> 
+	<meta name="viewport" content="width=device-width, height=device-height, user-scalable=0, initial-scale=1, maximum-scale=1, minimum-scale=1"/>        
+        <meta property="og:title" content="Maze - mdRwd" />
+	<meta property="og:description" content="A jQuery/PHP framework for development of Web applications partitioned in different communicating devices." />
+	<meta property="og:url" content="http://www.mdrwd.com/demo/maze" />
+	<meta property="og:image" content="../../lib/img/mdRwdLogo500.png" />
+	<meta name="keywords" content="mdRwd, rwd, responsive web design, multi-device"/>
+	<meta name="description" content="A jQuery/PHP framework for development of Web applications partitioned in different communicating devices."/>
+        <link rel="img_src" href="../../lib/img/mdRwdLogo500.png"/>
+	<link rel="apple-touch-icon-precomposed" href="img/logo.png"/>  
+	<link rel="icon" href="../../lib/img/favicon.ico" type="image/x-icon"/>
+	<!-- mdRwd css (required) -->
+        <link rel="stylesheet" href="../../lib/css/jquery.mdRwd.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href="css/index.css" type="text/css" media="screen"/>
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,600,700" rel="stylesheet" />
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'/>
+	<link href='http://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'/>
+	<!-- jquery (required) -->
+        <script src="js/jquery.min.js" type="text/javascript"></script>
+	<!-- jquery hummer plugin (required for touch gestures events) -->
+        <script src="js/jquery.hammer.js" type="text/javascript"></script>
+	<!-- jquery mdRwd plugin (required) -->
+        <script src="../../lib/js/jquery.mdRwd.js" type="text/javascript"></script>
+        <script src="js/shake.js" type="text/javascript"></script>
+        <script src="js/jquery-ui.custom.effect-shake.js" type="text/javascript"></script>
+	<!-- game layout js -->
+        <script src="js/game.js" type="text/javascript"></script>
+	<!-- control layout js -->
+        <script src="js/control.js" type="text/javascript"></script>
+        <script type="text/javascript">
+	    var mdRwd; //gobal mdRwd var
+	    $(document).ready(function() {
+		game_initGame(); //init game
+		//init mdRwd
+		mdRwd = $("#mdRwdButton").mdRwd({
+		    "ip": "149.132.157.136", //server ip
+		    "port": "9000", //server port
+		    "debug": true, //console log mdRwd error messages
+		    "stateful": true, //determines whether the application is stateful or not
+		    "mdRwdOnWindowShow": function(){ //callback called when mdRwd window shows
+			game_pauseGame(); //pause the game
+		    },
+		    "mdRwdOnWindowHide": function(){ //callback called when mdRwd window hides
+			game_playGame(); //play the game
+		    },
+		    "html": { //mdRwd UI html personalisation (all subproperties supports html)
+			"connectButton": "Connect device", //mdRwd connect device button
+			"disconnectButton": "Disconnect device", //mdRwd disconnect device button
+			"window": { //mdRwd window
+			    "header": { //header
+				"title": "Connect device", //title
+				"close": "Close" //close button
+			    },
+			    "content": { //content
+				"layoutsLabel": "Connect as...", //layouts label
+				"vcLabel": "Game", //virtual channel id label
+				"loadingImgPath": "../../lib/img/loading.gif", //path for loading image
+				"connectVcLabel": "Connect to another game", //virtual channel connection label
+				"connectVcButton": "Connect", //virtual channel connection button 
+				"warningMessages": { //mdRwd server warning messages
+				    "7000": "The game does not exist", //received when virtual channel you are trying to connect does not exist
+				    "7001": "You are already conncetd to this game", //received when you are trying to connect to a virtual channel you are already connected
+				    "7002": "There is no available game<br/>Please try again later", //received when all available virtual channels are already created
+				    "7003": "The game is full<br/>Please try again later", //received when the virtual channel you are trying to connect has reached its clients limit
+				    "7004": "The game for the current IP is full<br/>Please try again later", //received when the virtual channel you are trying to connect has reached its clients with same IP limit
+				    "7005": "The game is currently busy<br/>Please try again later" //received when the server is currently in lock (only if stateful=true)
+				}
+			    }
+			}
+		    },
+		    "components": { //application components. If stateful=true, initial JSON state could be set inside the "component[idComponent].state" property.
+			"maze": {"selector":"#maze"}, //maze game component.
+			"playerControl": {"selector":"#playerControl"}, //remote touch control player component.
+			"footer": {"selector":"#footer"} //footer component
+		    },
+		    "layouts": { //application layouts
+			"game": { //game layout
+			    "mdRwdOnMultiDeviceMode": function() { //callback called when the application switches from mono-device mode to multi-device mode (when first devices pairing occur)
+				game_setGameMode("multiDevice"); //set game mode to multi-device
+			    },
+			    "mdRwdOnMonoDeviceMode": function() { //callback called when the application switches from multi-device mode to mono-device mode (when disconnection from a virtual channel occur)
+				game_setGameMode("monoDevice"); //set game mode to mono-device
+			    },
+			    "components": "maze, footer", //set of components that form the game layout (chosen from defined components above)
+			    "devices": "desktop, tablet", //all supported devices by the game layout (only listed devices will display game layout)
+			    "html":{ //mdRwd window layout button html (it will be displayed in a layout buttons list if the current device supports many layouts)
+				"name": "Maze", //name
+				"description": "(visualize the maze game)" //description
+			    },
+			    "connectionTypes": "newVc, connVc", //layout supported server connections (game layout can create new virtual channel or connect to another virtual channel)
+			    "css": "css/game.css", //CSS stylesheet to be loaded when the application switches from mono-device mode to multi-device mode (when first devices pairing occur)
+			    "events": { //all supported events by the game layout
+				"incoming": { //all supported incoming events by the game layout, it will listen for this events and will execute a corresponding event callback
+				    "mdRwd": { //mdRwd events callbacks (events triggered by the mdRwd framework)
+					"newVc": game_newGame, //callback called when newVc event has been catched. This event is triggered when a new virtual channel has been created. Only the virtual channel creator receives this event.
+					"connVc": game_clientConnection, //callback called when connVc event has been catched. This event is triggered when a client connects to the current virtual channel. All virtual channel clients receive this event. If stateful=true clients also receive the states of their components from the server.
+					"rmVcClient": game_clientDisconnection //callback called when rmVcClient event has been catched. This event is triggered when a client has been removed from the current virtual channel. All virtual channel clients receive this event.
+				    },
+				    "touch": { //touch events callbacks
+					"swiperight": game_moveRight, //callback called when swiperight event has been catched
+					"swipeup": game_moveUp, //callback called when swipeup event has been catched
+					"swipeleft": game_moveLeft, //callback called when swipeleft event has been catched
+					"swipedown": game_moveDown //callback called when swipedown event has been catched
+				    },
+                                    "custom": { //custom events callbacks
+                                        "shakeDevice": game_shakeBall, //callback called when shakeDevice event has been catched
+					"closeWinWindow": game_closeWinWindow, //callback called when closeWinWindow event has been catched
+					"closeHelpWindow": game_closeHelpWindow //callback called when closeHelpWindow event has been catched
+                                    }
+				},
+				"outgoing": { //all supported outgoing events by the game layout, it will listen for this events and will trigger the catched event into the corrisponding virtual channel
+                                    "custom": "closeWinWindow, closeHelpWindow" //all custom events to be listen (comma separated). Every custom event must be explicitly triggered 
+				}
+			    }
+			},
+			"control": { //control layout
+			    "components": "playerControl, footer", //set of components that form the control layout (chosen from defined components above)
+			    "devices": "smartphone, tablet", //all supported devices by the control layout (only listed devices will display control layout)
+			    "connectionTypes": "connVc", //layout supported server connections (game layout can only to another virtual channel)
+			    "html":{ //mdRwd window layout button html (it will be displayed in a layout buttons list if the current device supports many layouts)
+				"name": "Player", //name
+				"description": "(connect as a remote control player)" //description
+			    },
+			    "css": "css/control.css", //CSS stylesheet to be loaded when the application switches from mono-device mode to multi-device mode (when first devices pairing occur)
+			    "events": { //all supported events by the control layout
+				"incoming": { //all supported incoming events by the game layout, it will listen for this events and will execute a corresponding event callback
+				    "mdRwd": { //mdRwd events callbacks (events triggered by the mdRwd framework)
+					"connVc":   control_clientConnection //callback called when connVc event has been catched. This event is triggered when a client connects to the current virtual channel. All virtual channel clients receive this event. If stateful=true, clients also receive the states of their components from the server.
+				    }
+				},
+				"outgoing": { //all supported outgoing events by the control layout, it will listen for this events and will trigger the catched event into the corrisponding virtual channel
+				    "touch": " swipeup(maze), swiperight(maze), swipedown(maze), swipeleft(maze)",  //all touch events to be listen (comma separated)
+														    //if an outgoing event is going to affect the state of a component in another layout, the component must be listed inside the brackets (only if stateful=true)
+														    //the server will lock the component until the corrisponding layout sets its state
+                                    "custom": "shakeDevice" //all custom events to be listen (comma separated). Every custom event must be explicitly triggered 
+				}
+			    }
+			}
+		    }
+		});
+	    });
+	</script>
+	<script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments);},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m);
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	    ga('create', 'UA-24580056-4', 'mdrwd.com');
+	    ga('send', 'pageview');
+	</script>
+    </head>
+    <body>
+	<!-- maze component -->
+	<div id="maze">
+	    <div id="winWindow">
+		<div id="winOverlay"></div>
+		<div id="ballWrapper">
+		    <div id="ball"></div>
+		    <div id="winText"></div>
+		</div>
+	    </div>
+	    <div id="helpWindow">
+		<div id="helpOverlay"></div>
+		<div id="helpText">Mono-Device Mode<br/>Move your ball using<br/>arrow keys</div>
+		<div id="helpImg"><img src="img/arrowKeysMotion.png"/></div>
+	    </div>
+	    <div id="mdRwdButton"></div>
+	    <div id="mazeTitle">Maze <div id="mazeId"></div></div>
+	    <div id="mazeLogo"><img src="img/logo.png"/></div>
+            <div id="mazeContainer">
+		<div id="mazeStructure">
+		    <img src="img/arrowDownWhite.png" id="start"/>
+		    <div class="mrow"><div class="cell left notop noright nobottom"></div><div class="cell top noright bottom"></div><div class="cell top noright bottom"></div><div class="cell top noright nobottom"></div><div class="cell top right nobottom"></div><div class="cell top right nobottom"></div><div class="cell top noright nobottom"></div><div class="cell top noright nobottom"></div><div class="cell top right bottom"></div><div class="cell top noright nobottom"></div><div class="cell top noright nobottom"></div><div class="cell top right nobottom"></div></div>
+		    <div class="mrow"><div class="cell left right nobottom"></div><div class="cell noright nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell noright bottom"></div><div class="cell right bottom"></div><div class="cell right nobottom"></div><div class="cell noright nobottom"></div><div class="cell right bottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div></div>
+		    <div class="mrow"><div class="cell left right bottom"></div><div class="cell right nobottom"></div><div class="cell noright bottom"></div><div class="cell right bottom"></div><div class="cell noright bottom"></div><div class="cell noright bottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right bottom"></div></div>
+		    <div class="mrow"><div class="cell left right nobottom"></div><div class="cell right nobottom"></div><div class="cell noright nobottom"></div><div class="cell noright bottom"></div><div class="cell right nobottom"></div><div class="cell noright nobottom"></div><div class="cell right bottom"></div><div class="cell noright nobottom"></div><div class="cell noright bottom"></div><div class="cell right bottom"></div><div class="cell noright bottom"></div><div class="cell right nobottom"></div></div>
+		    <div class="mrow"><div class="cell left right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell noright bottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell noright nobottom"></div><div class="cell noright bottom"></div><div class="cell right bottom"></div></div>
+		    <div class="mrow"><div class="cell left noright bottom"></div><div class="cell right bottom"></div><div class="cell noright bottom"></div><div class="cell right nobottom"></div><div class="cell right bottom"></div><div class="cell right nobottom"></div><div class="cell noright nobottom"></div><div class="cell right bottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell noright nobottom"></div><div class="cell right nobottom"></div></div>
+		    <div class="mrow"><div class="cell left noright bottom"></div><div class="cell noright nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell noright nobottom"></div><div class="cell right bottom"></div><div class="cell right nobottom"></div><div class="cell noright nobottom"></div><div class="cell right bottom"></div><div class="cell noright bottom"></div><div class="cell right bottom"></div><div class="cell right nobottom"></div></div>
+		    <div class="mrow"><div class="cell left noright nobottom"></div><div class="cell right bottom"></div><div class="cell noright bottom"></div><div class="cell right nobottom"></div><div class="cell noright bottom"></div><div class="cell right nobottom"></div><div class="cell noright nobottom"></div><div class="cell right bottom"></div><div class="cell noright nobottom"></div><div class="cell noright bottom"></div><div class="cell noright bottom"></div><div class="cell right nobottom"></div></div>
+		    <div class="mrow"><div class="cell left right nobottom"></div><div class="cell noright bottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell noright nobottom"></div><div class="cell right bottom"></div><div class="cell noright nobottom"></div><div class="cell noright bottom"></div><div class="cell right bottom"></div></div>
+		    <div class="mrow"><div class="cell left noright nobottom"></div><div class="cell right nobottom"></div><div class="cell noright bottom"></div><div class="cell noright bottom"></div><div class="cell right bottom"></div><div class="cell right nobottom"></div><div class="cell right bottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell noright nobottom"></div><div class="cell right nobottom"></div></div>
+		    <div class="mrow"><div class="cell left right nobottom"></div><div class="cell noright bottom"></div><div class="cell noright bottom"></div><div class="cell noright bottom"></div><div class="cell right nobottom"></div><div class="cell noright bottom"></div><div class="cell noright bottom"></div><div class="cell right bottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div><div class="cell right nobottom"></div></div>
+		    <div class="mrow"><div class="cell left noright bottom"></div><div class="cell noright bottom"></div><div class="cell noright bottom"></div><div class="cell right bottom"></div><div class="cell noright bottom"></div><div class="cell noright bottom"></div><div class="cell noright bottom"></div><div class="cell noright bottom"></div><div class="cell noright bottom"></div><div class="cell noright bottom"></div><div class="cell right bottom"></div><div class="cell right"></div></div>  
+		    <img src="img/arrowDownWhite.png" id="finish"/>
+		</div>            
+            </div>            
+        </div>
+	<!-- playerControl component -->
+	<div id="playerControl">
+	    <div id="touchpad">
+		<img src="img/touchpad.png" id="touchpadImg"/>
+	    </div>
+	</div>
+	<!-- footer component -->
+	<div id="footer">&copy; 2014 mdRwd</div>
+    </body>
+</html>
