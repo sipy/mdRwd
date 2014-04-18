@@ -1,7 +1,7 @@
 mdRwd
 =====
 
-A jQuery/PHP framework for development of Web applications partitioned in different communicating devices.
+A framework for development of Web applications partitioned in different communicating devices.
 
 Coming soon...
 
