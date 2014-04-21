@@ -102,17 +102,18 @@ body{
     position: relative;
 }
 #footer{
-font-family: 'Open Sans';
-text-align: center;
-color: #FFF;
-position: fixed;
-bottom: 0px;
-font-weight: normal;
-width: 100%;
-background: #2FCC71;
-padding: 5px;
-z-index: 10;
-left: 0;
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+    color: #fff;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    background: #2FCC71;
+    padding: 5px;
+    z-index: 10;
+    left: 0;
+    font-size: 13px;
+line-height: 22px;
 }
 .mrow {
     float: left;
