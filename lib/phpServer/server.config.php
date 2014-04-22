@@ -2,7 +2,7 @@
 /* 
  * mdRwd -  A framework for development of Web applications 
  *          partitioned in different communicating devices.
- * v0.1.0 - 2014-04-13
+ * v0.1.1 - 2014-04-22
  * http://www.mdRwd.org/
  * Copyright (C) 2014  Simeon Ivaylov Petrov, Alessio Bellino, Flavio De Paoli
  * 

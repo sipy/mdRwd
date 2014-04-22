@@ -28,7 +28,7 @@
 	<!-- jquery hummer plugin (required for touch gestures events) -->
         <script src="js/jquery.hammer.js" type="text/javascript"></script>
 	<!-- jquery mdRwd plugin (required) -->
-        <script src="../../lib/js/jquery.mdRwd.js" type="text/javascript"></script>
+        <script src="../../lib/js/jquery.mdRwd.min.js" type="text/javascript"></script>
         <script src="js/shake.js" type="text/javascript"></script>
         <script src="js/jquery-ui.custom.effect-shake.js" type="text/javascript"></script>
 	<!-- game layout js -->
@@ -41,7 +41,7 @@
 		game_initGame(); //init game
 		//init mdRwd
 		mdRwd = $("#mdRwdButton").mdRwd({
-		    "ip": "149.132.157.136", //server ip
+		    "ip": "192.168.1.102", //server ip
 		    "port": "9000", //server port
 		    "debug": true, //console log mdRwd error messages
 		    "stateful": true, //determines whether the application is stateful or not
