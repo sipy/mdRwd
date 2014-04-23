@@ -108,11 +108,12 @@ function validMessage($clientId, $message){
                     $message["changeLayout"] = (bool) $message["changeLayout"];
                 break;
             case $avlbCmds["TRIGGER_VC_EVENT"]:
-                if(!isset($message["event"]) || !isset($message["event"]["affectedComponents"])){
+                if(!isset($message["event"]) || (STATEFUL && !isset($message["event"]["affectedComponents"]))){
                     $checkMessage = false;
                 }else{
                     $message["event"] = (array) $message["event"];
-                    $message["event"]["affectedComponents"] = (array) $message["event"]["affectedComponents"];
+                    if(STATEFUL)
+                        $message["event"]["affectedComponents"] = (array) $message["event"]["affectedComponents"];
                 }
                 break;
             case $avlbCmds["SET_VC_COMP_STATE"]:
