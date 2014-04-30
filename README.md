@@ -1,4 +1,5 @@
-mdRwd - Multi-Device Responsive Web Design
+mdRwd
+##Multi-Device Responsive Web Design
 =====
 
 A framework for development of Web applications partitioned in different communicating devices.
