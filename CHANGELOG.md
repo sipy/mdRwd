@@ -15,7 +15,7 @@ CHANGELOG - Release v0.1.2 (2014-04-30)
 
 #### Bug Fixes
 
-* **game.js:** bug fixes. 
+* **game.js:** bug fixes
 
 <a name="v0.1.1"></a>
 ### v0.1.1 (2014-04-22)
