@@ -58,7 +58,6 @@ class PHPWebSocket
 	// the maximum length, in bytes, of a message's payload data, this is also internally limited to 2,147,483,647
 	const WS_MAX_MESSAGE_PAYLOAD_RECV = 500000;
 
-
 	// internal
 	const WS_FIN =  128;
 	const WS_MASK = 128;
