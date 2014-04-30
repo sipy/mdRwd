@@ -2,7 +2,6 @@
 /* 
  * mdRwd -  A framework for development of Web applications 
  *          partitioned in different communicating devices.
- * v0.1.1 - 2014-04-22
  * http://www.mdRwd.org/
  * Copyright (C) 2014  Simeon Ivaylov Petrov, Alessio Bellino, Flavio De Paoli
  * 
@@ -79,6 +78,7 @@
     define("WS_STATUS_MAX_VC_CLIENTS"              ,       7003); 
     define("WS_STATUS_MAX_VC_CLIENTS_PER_IP"       ,       7004); 
     define("WS_STATUS_COMPONENT_LOCK"              ,       7005); 
+    define("WS_STATUS_MAX_VC_LAYOUTS"              ,       7006); 
     //you can set your own custom status codes, the range must be greater then 5000 because status codes below 5000 are reserved to the WebSocket protocol
 
 ?>
