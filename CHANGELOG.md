@@ -4,8 +4,18 @@ CHANGELOG - Release v0.1.2 (2014-04-30)
 ### v0.1.2 (2014-04-30)
 
 #### Features
+* **jquery.mdRwd.js:** added new public methods and improvements
+     * destroy(),
+     * getMyId(),
+     * getMyVc(),
+     * getMyDevice(),
+     * getMyLayout()
+* **server.php:** added max vc layout instances support
+* **server.config.php:** added WS_STATUS_MAX_VC_LAYOUTS status code
 
-* **jquery.mdRwd.js:** fixes and improvements. 
+#### Bug Fixes
+
+* **game.js:** bug fixes. 
 
 <a name="v0.1.1"></a>
 ### v0.1.1 (2014-04-22)
