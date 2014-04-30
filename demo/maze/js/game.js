@@ -371,6 +371,8 @@ function game_addPlayerToGame(playerId, newPlayer) {
                     gamePlayers[index].playerId = playerId;
                 }
             });
+            if (multiDevice)
+                game_setGameState();
         } else {
             $("#mazeStructure").append('<div id="player' + playerId + '" class="player"></div>');
             $.each(gamePlayers, function(index, playerObj) {
