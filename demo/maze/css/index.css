@@ -113,7 +113,7 @@ body{
     z-index: 10;
     left: 0;
     font-size: 13px;
-line-height: 22px;
+    line-height: 22px;
 }
 .mrow {
     float: left;
@@ -160,79 +160,29 @@ line-height: 22px;
 }
 
 #mdRwdButton{
-webkit-background-clip: border-box;
--webkit-background-origin: padding-box;
--webkit-background-size: auto;
--webkit-box-shadow: none;
--webkit-transition-delay: 0s;
--webkit-transition-duration: 0.2s;
--webkit-transition-property: background-color;
--webkit-transition-timing-function: ease-in-out;
-background-color: #2FCC71;
-background-image: url('../img/bg.png');
-background-origin: padding-box;
-background-size: auto;
-border-bottom-color: #FFF;
-border-bottom-left-radius: 8px;
-border-bottom-right-radius: 8px;
-border-bottom-style: none;
-border-bottom-width: 0px;
-border-image-outset: 0px;
-border-image-repeat: stretch;
-border-image-slice: 100%;
-border-image-source: none;
-border-image-width: 1;
-border-left-color: #FFF;
-border-left-style: none;
-border-left-width: 0px;
-border-right-color: #FFF;
-border-right-style: none;
-border-right-width: 0px;
-border-top-color: #FFF;
-border-top-left-radius: 8px;
-border-top-right-radius: 8px;
-border-top-style: none;
-border-top-width: 0px;
-box-shadow: none;
-box-sizing: border-box;
-color: #FFF;
-cursor: pointer;
-display: inline-block;
-font-family: 'Open Sans', sans-serif;
-font-size: 30px;
-font-style: normal;
-font-variant: normal;
-font-weight: bold;
-height: 60px;
-line-height: 13px;
-margin-bottom: 0px;
-margin-left: 0px;
-margin-right: 0px;
-margin-top: 0px;
-outline-color: #FFF;
-outline-style: none;
-outline-width: 0px;
-overflow-x: hidden;
-overflow-y: hidden;
-padding-bottom: 22px;
-padding-top: 22px;
-position: relative;
-text-align: left;
-text-decoration: none solid rgb(255, 255, 255);
-text-shadow: none;
-top: 1px;
-font-family: 'Audiowide', cursive;
-transition-delay: 0s;
-transition-duration: 0.2s;
-transition-property: background-color;
-transition-timing-function: ease-in-out;
-vertical-align: baseline;
-width: 100%;
-text-align: center;
+    background-color: #2FCC71;
+    background-image: url('../img/bg.png');
+    border-radius: 8px;
+    box-shadow: none;
+    color: #FFF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 30px;
+    font-weight: bold;
+    height: 60px;
+    line-height: 60px;
+    position: relative;
+    font-family: 'Audiowide', cursive;
+    transition-delay: 0s;
+    transition-duration: 0.2s;
+    transition-property: background-color;
+    transition-timing-function: ease-in-out;
+    width: 100%;
+    text-align: center;
 }
 
 #mdRwdButton:hover{
-  background: #3DEC87;
+    background: #3DEC87;
 }
 
 #mazeLogo{
@@ -275,7 +225,7 @@ text-align: center;
     bbackground-image: url('../img/bg.png');
 }
 #mdRwdWindow{
-     box-shadow: none;
+    box-shadow: none;
 }
 #winText{
     color: #2FCC71;
