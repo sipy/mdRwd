@@ -22,7 +22,7 @@
 */
 
 /*
- * Based on PHP WebSocket Server 0.2
+ * Based on PHP WebSocket Server 0.2 
  *  - http://code.google.com/p/php-websocket-server/
  *  - http://code.google.com/p/php-websocket-server/wiki/Scripting
  * 
@@ -57,8 +57,6 @@ class PHPWebSocket
 
 	// the maximum length, in bytes, of a message's payload data, this is also internally limited to 2,147,483,647
 	const WS_MAX_MESSAGE_PAYLOAD_RECV = 500000;
-
-
 
 
 	// internal
