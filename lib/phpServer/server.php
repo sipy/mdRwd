@@ -2,7 +2,6 @@
 /* 
  * mdRwd -  A framework for development of Web applications 
  *          partitioned in different communicating devices.
- * v0.1.1 - 2014-04-22
  * http://www.mdRwd.org/
  * Copyright (C) 2014  Simeon Ivaylov Petrov, Alessio Bellino, Flavio De Paoli
  * 
@@ -102,7 +101,7 @@ function validMessage($clientId, $message){
                     $message["initComponents"] = (array) $message["initComponents"];
                 break;
             case $avlbCmds["CONN_VC"]:
-                if(!isset($message["changeLayout"]))
+                if(!isset($message["changeLayout"]) || (isset($message["changeLayout"]) && $message["changeLayout"] && !isset($message["client"]["oldLayout"])))
                     $checkMessage = false;
                 else
                     $message["changeLayout"] = (bool) $message["changeLayout"];
@@ -158,11 +157,16 @@ function newVcHandler($message) {
             //add components to the virtual channel
             $server->wsVcs[$message["vcId"]]["components"] = $message["initComponents"];
         }
+        $server->wsVcs[$message["vcId"]]["layouts"] = $message["initLayouts"];
+        
         //add client to the virtual channel
         $server->wsVcs[$message["vcId"]]["clients"][$message["client"]["id"]] = $message["client"];
         $server->wsVcsCount++;
         $server->wsVcsClientCount[$message["vcId"]] = 1;
         $server->wsVcsClientIPCount[$message["vcId"]][$server->wsClients[$message["client"]["id"]][6]] = 1;
+        
+        //increase client layout count
+        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["count"]++;
         
         $message["statusCode"] = WS_STATUS_OK;
         
@@ -182,7 +186,7 @@ function connVcHandler($message){
     if (isset($server->wsVcs[$message["vcId"]])) {
         //if current client is not connected yet to the virtual channel
         if (!isset($server->wsVcs[$message["vcId"]]["clients"][$message["client"]["id"]]) || $message["changeLayout"]) {
-            $maxStatusCode = checkWsMaximums($message["client"]["id"], $message["vcId"]);
+            $maxStatusCode = checkWsMaximums($message["client"]["id"], $message["vcId"], $message["client"]["layout"]["id"]);
             if ($maxStatusCode == -1) {
                 if (STATEFUL) {
                     $lock = false;
@@ -207,7 +211,7 @@ function connVcHandler($message){
                     serverLog('client "' . $message["client"]["id"] . '" waiting component lock inside the virtual channel "' . $message["vcId"] . '" ' . ($message["changeLayout"] ? '(changeLayout)' : ''));
                 }else{
                     if (!$message["changeLayout"]) {
-                        //remove the temporary virtual channel created by this client (newVc command)
+                        //remove the temporary virtual channel created by this client (if created with the newVc command)
                         $tmpVcId = getVcClient($message["client"]["id"]);
                         if ($tmpVcId != -1) 
                             rmVc($tmpVcId);
@@ -219,7 +223,17 @@ function connVcHandler($message){
                             $server->wsVcsClientIPCount[$message["vcId"]][$server->wsClients[$message["client"]["id"]][6]] ++;
                         else
                             $server->wsVcsClientIPCount[$message["vcId"]][$server->wsClients[$message["client"]["id"]][6]] = 1;
+                        
+                        //increase client layout count
+                        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["count"]++;
+                    }else{
+                        //decrease client oldLayout count
+                        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["oldLayout"]["id"]]["count"]--;
+                        //increase client layout count
+                        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["count"]++;
                     }
+                    
+                    $message["vcClients"] = $server->wsVcs[$message["vcId"]]["clients"];
                     
                     if(STATEFUL){
                         $message["lock"] = $lock;
@@ -229,7 +243,7 @@ function connVcHandler($message){
                             $message["componentsFromServer"][$component] = $server->wsVcs[$message["vcId"]]["components"][$component];
                         }
                     }
-                    
+ 
                     $message["statusCode"] = WS_STATUS_OK;
                     
                     sendMessage($message, $avlbDests["ME"]);
@@ -310,9 +324,9 @@ function setVcCompStateHandler($message){
 }
 
 //check WebSocket capacity limits
-function checkWsMaximums($clientId, $vcId = NULL) {
+function checkWsMaximums($clientId, $vcId = NULL, $clientLayout = NULL) {
     global $server;
-
+    
     if (!isset($vcId)) {
         if ($server->wsVcsCount == WS_MAX_VCS) 
             return WS_STATUS_MAX_VCS;
@@ -321,6 +335,12 @@ function checkWsMaximums($clientId, $vcId = NULL) {
             return WS_STATUS_MAX_VC_CLIENTS;
         if (isset($server->wsVcsClientIPCount[$vcId][$server->wsClients[$clientId][6]]) && $server->wsVcsClientIPCount[$vcId][$server->wsClients[$clientId][6]] == WS_MAX_VC_CLIENTS_PER_IP) 
             return WS_STATUS_MAX_VC_CLIENTS_PER_IP;
+        if(isset($clientLayout)){
+            if($server->wsVcs[$vcId]["layouts"][$clientLayout]["maxInstances"] > -1){
+                if($server->wsVcs[$vcId]["layouts"][$clientLayout]["count"] == $server->wsVcs[$vcId]["layouts"][$clientLayout]["maxInstances"])
+                    return WS_STATUS_MAX_VC_LAYOUTS;
+            }
+        }
     }
 
     return -1;
@@ -352,11 +372,15 @@ function rmClient($clientId, $statusCode) {
         $message["client"] = $server->wsVcs[$vcId]["clients"][$clientId];
         $message["timeStamp"] = time();
         
+        //decrease client layout count
+        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["count"]--;
+        
         if (isset($server->wsVcsClientIPCount[$vcId][ip2long($message["client"]["ip"])])) 
             $server->wsVcsClientIPCount[$vcId][ip2long($message["client"]["ip"])]--;
         
         unset($server->wsVcs[$vcId]["clients"][$clientId]);
         $server->wsVcsClientCount[$vcId]--;
+        
         
         sendMessage($message, $avlbDests["ALL_VC"]);
         
