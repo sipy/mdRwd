@@ -1,7 +1,7 @@
 CHANGELOG - Release v0.2.0 (2014-04-30)
 =====
 <a name="v0.2.0"></a>
-### v0.2.0 (2014-04-30)
+## v0.2.0 (2014-04-30)
 
 #### Features
 * **jquery.mdRwd.js:** added new public methods and improvements ([c41b5dc06e](https://github.com/sipy/mdRwd/commit/c41b5dc06e5f7021988c78443a56adc2eb774b1d))
