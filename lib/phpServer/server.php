@@ -37,6 +37,7 @@ $server = new PHPWebSocket();
 $avlbCmds = array(
                 "NEW_VC" => "newVc", //create new virtual channel
                 "CONN_VC" => "connVc", //connect to a virtual channel
+                "CHANGE_LAYOUT" => "changeLayout", //change client layout
                 "TRIGGER_VC_EVENT" => "triggerVcEvent", //trigger event into a virtual channel
                 "SET_VC_COMP_STATE" => "setVcCompState" //set a component state inside a virtual channel
             );
@@ -73,6 +74,9 @@ function wsOnMessage($clientId, $message, $messageLength, $binary) {
             case $avlbCmds["CONN_VC"]:
                 connVcHandler($message);
                 break;
+            case $avlbCmds["CHANGE_LAYOUT"]:
+                changeLayoutHandler($message);
+                break;
             case $avlbCmds["TRIGGER_VC_EVENT"]:
                 triggerVcEventHandler($message);
                 break;
@@ -90,7 +94,7 @@ function validMessage($clientId, $message){
     if(
         isset($message["cmd"]) && in_array($message["cmd"], $avlbCmds) &&
         isset($message["vcId"]) &&
-        isset($message["client"]) && isset($message["client"]["layout"]) && isset($message["client"]["layout"]["id"]) &&
+        isset($message["client"]) && isset($message["client"]["device"]) && isset($message["client"]["layout"]) && isset($message["client"]["layout"]["id"]) &&
         ((STATEFUL && isset($message["client"]["layout"]["components"])) || !STATEFUL)
     ){
         switch ($message["cmd"]) {
@@ -101,10 +105,10 @@ function validMessage($clientId, $message){
                     $message["initComponents"] = (array) $message["initComponents"];
                 break;
             case $avlbCmds["CONN_VC"]:
-                if(!isset($message["changeLayout"]) || (isset($message["changeLayout"]) && $message["changeLayout"] && !isset($message["client"]["oldLayout"])))
+                break;
+            case $avlbCmds["CHANGE_LAYOUT"]:
+                if(!isset($message["client"]["oldLayout"]) || !isset($message["client"]["oldLayout"]["id"]))
                     $checkMessage = false;
-                else
-                    $message["changeLayout"] = (bool) $message["changeLayout"];
                 break;
             case $avlbCmds["TRIGGER_VC_EVENT"]:
                 if(!isset($message["event"]) || (STATEFUL && !isset($message["event"]["affectedComponents"]))){
@@ -169,6 +173,8 @@ function newVcHandler($message) {
         $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["instances"][] = $message["client"]["id"];
         
         $message["statusCode"] = WS_STATUS_OK;
+        $message["vcClients"] = $server->wsVcs[$message["vcId"]]["clients"];
+        $message["vcLayouts"] = $server->wsVcs[$message["vcId"]]["layouts"];
         
         sendMessage($message, $avlbDests["ME"]);
 
@@ -185,7 +191,7 @@ function connVcHandler($message){
     //if virtual channel exists 
     if (isset($server->wsVcs[$message["vcId"]])) {
         //if current client is not connected yet to the virtual channel
-        if (!isset($server->wsVcs[$message["vcId"]]["clients"][$message["client"]["id"]]) || $message["changeLayout"]) {
+        if (!isset($server->wsVcs[$message["vcId"]]["clients"][$message["client"]["id"]])) {
             $maxStatusCode = checkWsMaximums($message["client"]["id"], $message["vcId"], $message["client"]["layout"]["id"]);
             if ($maxStatusCode == -1) {
                 if (STATEFUL) {
@@ -210,29 +216,20 @@ function connVcHandler($message){
 
                     serverLog('client "' . $message["client"]["id"] . '" waiting component lock inside the virtual channel "' . $message["vcId"] . '" ' . ($message["changeLayout"] ? '(changeLayout)' : ''));
                 }else{
-                    if (!$message["changeLayout"]) {
-                        //remove the temporary virtual channel created by this client (if created with the newVc command)
-                        $tmpVcId = getVcClient($message["client"]["id"]);
-                        if ($tmpVcId != -1) 
-                            rmVc($tmpVcId);
-                        $server->wsVcs[$message["vcId"]]["clients"][$message["client"]["id"]] = $message["client"];
-                        $server->wsVcsClientCount[$message["vcId"]] ++;
-                        //if there is another client connected to the virtual channel with the same IP
-                        if (isset($server->wsVcsClientIPCount[$message["vcId"]][$server->wsClients[$message["client"]["id"]][6]]))
-                            $server->wsVcsClientIPCount[$message["vcId"]][$server->wsClients[$message["client"]["id"]][6]] ++;
-                        else
-                            $server->wsVcsClientIPCount[$message["vcId"]][$server->wsClients[$message["client"]["id"]][6]] = 1;
-                        
-                        //add client layout instance
-                        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["instances"][] = $message["client"]["id"];
-                    }else{
-                        $server->wsVcs[$message["vcId"]]["clients"][$message["client"]["id"]] = $message["client"];
-                        //remove client oldLayout instance
-                        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["oldLayout"]["id"]]["instances"] = 
-                            array_values(array_diff($server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["oldLayout"]["id"]]["instances"], array($message["client"]["id"])));
-                        //add client layout instance
-                        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["instances"][] = $message["client"]["id"];
-                    }
+                    //remove the temporary virtual channel created by this client (if created with the newVc command)
+                    $tmpVcId = getVcClient($message["client"]["id"]);
+                    if ($tmpVcId != -1) 
+                        rmVc($tmpVcId);
+                    $server->wsVcs[$message["vcId"]]["clients"][$message["client"]["id"]] = $message["client"];
+                    $server->wsVcsClientCount[$message["vcId"]] ++;
+                    //if there is another client connected to the virtual channel with the same IP
+                    if (isset($server->wsVcsClientIPCount[$message["vcId"]][$server->wsClients[$message["client"]["id"]][6]]))
+                        $server->wsVcsClientIPCount[$message["vcId"]][$server->wsClients[$message["client"]["id"]][6]] ++;
+                    else
+                        $server->wsVcsClientIPCount[$message["vcId"]][$server->wsClients[$message["client"]["id"]][6]] = 1;
+
+                    //add client layout instance
+                    $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["instances"][] = $message["client"]["id"];
                     
                     $message["vcClients"] = $server->wsVcs[$message["vcId"]]["clients"];
                     $message["vcLayouts"] = $server->wsVcs[$message["vcId"]]["layouts"];
@@ -251,12 +248,12 @@ function connVcHandler($message){
                     sendMessage($message, $avlbDests["ME"]);
                     
                     if(STATEFUL){
-                    unset($message["componentsFromServer"]);
+                        unset($message["componentsFromServer"]);
                     }
                     
                     sendMessage($message, $avlbDests["ALL_VC"]);
 
-                    serverLog('client "' . $message["client"]["id"] . '" connected to the virtual channel "' . $message["vcId"] . '" ' . ($message["changeLayout"] ? '(changeLayout)' : ''));
+                    serverLog('client "' . $message["client"]["id"] . '" connected to the virtual channel "' . $message["vcId"] . '"');
                 }
             }else {
                 $message["statusCode"] = $maxStatusCode;
@@ -264,6 +261,56 @@ function connVcHandler($message){
             }
         } else {
             $message["statusCode"] = WS_STATUS_CLIENT_ALREADY_IN_VC;
+            sendMessage($message, $avlbDests["ME"]);
+        }
+    } else {
+        $message["statusCode"] = WS_STATUS_UNKNOWN_VC;
+        sendMessage($message, $avlbDests["ME"]);
+    }
+}
+
+function changeLayoutHandler($message){
+    global $server, $avlbDests;
+    
+    //if virtual channel exists 
+    if (isset($server->wsVcs[$message["vcId"]])) {
+        //if client is connected to the current virtual channel
+        if (isset($server->wsVcs[$message["vcId"]]["clients"][$message["client"]["id"]])) {
+            $maxStatusCode = checkWsMaximums($message["client"]["id"], $message["vcId"], $message["client"]["layout"]["id"]);
+            if ($maxStatusCode == -1) {
+                $server->wsVcs[$message["vcId"]]["clients"][$message["client"]["id"]] = $message["client"];
+                //remove client oldLayout instance
+                $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["oldLayout"]["id"]]["instances"] = 
+                    array_values(array_diff($server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["oldLayout"]["id"]]["instances"], array($message["client"]["id"])));
+                //add client layout instance
+                $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["instances"][] = $message["client"]["id"];
+
+                $message["vcClients"] = $server->wsVcs[$message["vcId"]]["clients"];
+                $message["vcLayouts"] = $server->wsVcs[$message["vcId"]]["layouts"];
+                $message["statusCode"] = WS_STATUS_OK;
+
+                if(STATEFUL){
+                    //add components to message
+                    $message["componentsFromServer"] = array();
+                    foreach ($message["client"]["layout"]["components"] as $index => $component) {
+                        $message["componentsFromServer"][$component] = $server->wsVcs[$message["vcId"]]["components"][$component];
+                    }
+                }
+
+                sendMessage($message, $avlbDests["ME"]);
+
+                if(STATEFUL)
+                    unset($message["componentsFromServer"]);
+
+                sendMessage($message, $avlbDests["ALL_VC"]);
+
+                serverLog('client "' . $message["client"]["id"] . '" inside the virtual channel "' . $message["vcId"] . '" changed layout from "' . $message["client"]["oldLayout"]["id"] . '" to "' . $message["client"]["layout"]["id"] . '"');
+            }else {
+                $message["statusCode"] = $maxStatusCode;
+                sendMessage($message, $avlbDests["ME"]);
+            }
+        } else {
+            $message["statusCode"] = WS_STATUS_CLIENT_NOT_IN_VC;
             sendMessage($message, $avlbDests["ME"]);
         }
     } else {
