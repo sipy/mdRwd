@@ -61,6 +61,7 @@ function game_showHelp() {
             $("#helpText").html('Multi-Device Mode<br/>Move your ball using<br/>touch gestures');
             $("#helpImg img").attr('src', 'img/touchMotion.png');
             $("#helpWindow").fadeIn('fast');
+            game_setGameState();
         } else if(!helpArrows) {
             game_pauseGame();
             helpArrows = true;
@@ -332,7 +333,7 @@ function game_setPlayerPosition(playerId) {
 }
 
 function game_setGameState() {
-    if(mdRwd) mdRwd.setVcCompState("maze", {"helpArrows": helpArrows, "helpTouch": helpTouch, "gamePlayers": gamePlayers}, true);
+    if(mdRwd) mdRwd.setVcCompState("maze", {"helpArrows": helpArrows, "helpTouch": helpTouch, "gamePlayers": gamePlayers});
 }
 
 function game_removePlayerFromGame(playerId) {
