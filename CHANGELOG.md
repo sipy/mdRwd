@@ -1,5 +1,14 @@
-CHANGELOG - Release v0.2.0 (2014-04-30)
+CHANGELOG - Release v0.2.1 (2014-05-03)
 =====
+
+<a name="v0.2.1"></a>
+### v0.2.1 (2014-05-03)
+
+#### Bug Fixes
+
+* **server.php:** fixes and improvements ([3676caf175](https://github.com/sipy/mdRwd/commit/3676caf17595fcd9e4d6e0e037e0432c36c0cb04))
+* **jquery.mdRwd.js:** fixes and improvements ([063b267665](https://github.com/sipy/mdRwd/commit/063b267665bfecd247679db6d79c42c53c77cf4c))
+
 <a name="v0.2.0"></a>
 ## v0.2.0 (2014-04-30)
 
