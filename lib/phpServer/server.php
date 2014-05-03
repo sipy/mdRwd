@@ -165,8 +165,8 @@ function newVcHandler($message) {
         $server->wsVcsClientCount[$message["vcId"]] = 1;
         $server->wsVcsClientIPCount[$message["vcId"]][$server->wsClients[$message["client"]["id"]][6]] = 1;
         
-        //increase client layout count
-        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["count"]++;
+        //add client layout instance
+        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["instances"][] = $message["client"]["id"];
         
         $message["statusCode"] = WS_STATUS_OK;
         
@@ -215,7 +215,6 @@ function connVcHandler($message){
                         $tmpVcId = getVcClient($message["client"]["id"]);
                         if ($tmpVcId != -1) 
                             rmVc($tmpVcId);
-                        //add client to the virtual channel
                         $server->wsVcs[$message["vcId"]]["clients"][$message["client"]["id"]] = $message["client"];
                         $server->wsVcsClientCount[$message["vcId"]] ++;
                         //if there is another client connected to the virtual channel with the same IP
@@ -224,16 +223,19 @@ function connVcHandler($message){
                         else
                             $server->wsVcsClientIPCount[$message["vcId"]][$server->wsClients[$message["client"]["id"]][6]] = 1;
                         
-                        //increase client layout count
-                        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["count"]++;
+                        //add client layout instance
+                        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["instances"][] = $message["client"]["id"];
                     }else{
-                        //decrease client oldLayout count
-                        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["oldLayout"]["id"]]["count"]--;
-                        //increase client layout count
-                        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["count"]++;
+                        $server->wsVcs[$message["vcId"]]["clients"][$message["client"]["id"]] = $message["client"];
+                        //remove client oldLayout instance
+                        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["oldLayout"]["id"]]["instances"] = 
+                            array_values(array_diff($server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["oldLayout"]["id"]]["instances"], array($message["client"]["id"])));
+                        //add client layout instance
+                        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["instances"][] = $message["client"]["id"];
                     }
                     
                     $message["vcClients"] = $server->wsVcs[$message["vcId"]]["clients"];
+                    $message["vcLayouts"] = $server->wsVcs[$message["vcId"]]["layouts"];
                     
                     if(STATEFUL){
                         $message["lock"] = $lock;
@@ -248,7 +250,9 @@ function connVcHandler($message){
                     
                     sendMessage($message, $avlbDests["ME"]);
                     
+                    if(STATEFUL){
                     unset($message["componentsFromServer"]);
+                    }
                     
                     sendMessage($message, $avlbDests["ALL_VC"]);
 
@@ -337,7 +341,7 @@ function checkWsMaximums($clientId, $vcId = NULL, $clientLayout = NULL) {
             return WS_STATUS_MAX_VC_CLIENTS_PER_IP;
         if(isset($clientLayout)){
             if($server->wsVcs[$vcId]["layouts"][$clientLayout]["maxInstances"] > -1){
-                if($server->wsVcs[$vcId]["layouts"][$clientLayout]["count"] == $server->wsVcs[$vcId]["layouts"][$clientLayout]["maxInstances"])
+                if(count($server->wsVcs[$vcId]["layouts"][$clientLayout]["instances"]) == $server->wsVcs[$vcId]["layouts"][$clientLayout]["maxInstances"])
                     return WS_STATUS_MAX_VC_LAYOUTS;
             }
         }
@@ -372,8 +376,9 @@ function rmClient($clientId, $statusCode) {
         $message["client"] = $server->wsVcs[$vcId]["clients"][$clientId];
         $message["timeStamp"] = time();
         
-        //decrease client layout count
-        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["count"]--;
+        //remove client layout instance
+        $server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["instances"] = 
+            array_values(array_diff($server->wsVcs[$message["vcId"]]["layouts"][$message["client"]["layout"]["id"]]["instances"], array($message["client"]["id"])));
         
         if (isset($server->wsVcsClientIPCount[$vcId][ip2long($message["client"]["ip"])])) 
             $server->wsVcsClientIPCount[$vcId][ip2long($message["client"]["ip"])]--;
