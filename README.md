@@ -6,7 +6,7 @@ A framework for development of Web applications partitioned in different communi
 
 <ul>
 <li><a href="https://github.com/sipy/mdRwd/wiki/Get-Started/">Get Started</a></li>
-<li><a href="http://www.mdrwd.org/api/">mdRwd detailed API</a></a></li>
+<li><a href="http://www.mdrwd.org/api/">Api</a></a></li>
 <li><a href="http://www.mdrwd.org/mdRwd/demo/maze/">Demo</a></a></li>
 <li><a href="https://github.com/sipy/mdRwd/blob/master/CHANGELOG.md">Changelog</a></a></li>
 </ul>
