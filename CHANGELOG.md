@@ -23,8 +23,9 @@ CHANGELOG - Release v0.3.2 (2014-05-09)
 * **jquery.mdRwd.js:** added new public method, layout property, mdRwd event and improvements ([4248e57](https://github.com/sipy/mdRwd/commit/4248e57b9c79eeaebbae996c7128c8b78f6f9f5d))
     * "hidden" - layout property
     * "changeLayout" - mdRwd event
-    * "getMyAppMode()" public method
+    * "getMyAppMode()" - public method
 * **server.php:** added  mdRwd event and improvements ([87e26e3](https://github.com/sipy/mdRwd/commit/87e26e3754ae113e8eecf574ad1f3ce122d8273d))
+    * "changeLayout" - mdRwd event
 
 #### Deprecated
 * **jquery.mdRwd.js:** ([4248e57](https://github.com/sipy/mdRwd/commit/4248e57b9c79eeaebbae996c7128c8b78f6f9f5d))
