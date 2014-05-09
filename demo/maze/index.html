@@ -136,7 +136,7 @@
 				    }
 				},
 				"outgoing": { //all supported outgoing events by the control layout, it will listen for this events and will trigger the catched event into the corrisponding virtual channel
-				    "touch": " swipeup(maze), swiperight(maze), swipedown(maze), swipeleft(maze)",  //all touch events to be listen (comma separated)
+				    "touch": "swipeup(maze), swiperight(maze), swipedown(maze), swipeleft(maze)",  //all touch events to be listen (comma separated)
 														    //if an outgoing event is going to affect the state of a component in another layout, the component must be listed inside the brackets (only if stateful=true)
 														    //the server will lock the component until the corrisponding layout sets its state
                                     "custom": "shakeDevice" //all custom events to be listen (comma separated). Every custom event must be explicitly triggered 
