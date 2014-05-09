@@ -1,0 +1,161 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+body {
+    font-family: "Open sans",Arial,sans-serif;
+}
+#connectBar{
+    height: 70px;
+    margin: 30px 0;
+}
+#connectLabel{
+    padding: 0 10px;
+    font-size: 25px;
+    line-height: 70px;
+    float: left;
+}
+#connect {
+    background: #ffdd00;
+    text-shadow: -1px -1px 0 #ffcc00, 1px -1px 0 #ffcc00, -1px 1px 0 #ffcc00, 1px 1px 0 #ffcc00;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px 0;
+    text-align: center;
+    float: right;
+     font-family: "Open sans condensed",Arial,sans-serif;
+    font-size: 35px;
+    font-weight: bold;
+    margin: 0;
+    width: 250px;
+    height: 50px;
+}
+#connect:hover {
+   opacity: 0.5; 
+}
+#usersBar {
+    background: #EEEEEE;
+    height: 30px;
+    clear: both;
+    display: none;
+    text-align: center;
+    width: 100%;
+    position: relative;
+}
+.genericUser {
+    background: url("../img/user.png") 50% 50%;
+    border-bottom: 8px solid #000;
+    height: 30px;
+    position: absolute;
+    width: 20px;
+    z-index: 2;
+    left: 0;
+}
+#rgbContainer{
+    position: relative;
+}
+#rgbContainer .event {
+    margin: 10px;
+    text-shadow: none;
+}
+#rgbContainer .event{
+    background: rgba(255, 255, 255, 0.8);
+    border: 5px solid #000;
+    color: #000000;
+    padding: 5px;
+}
+.events{
+    overflow: auto;
+    height: 100%;
+    z-index: 2;
+    position: relative;
+}
+.clickHere, .tapHere{
+    position: absolute;
+    top:50%;
+    font-family: "Open sans condensed",Arial,sans-serif;
+    left:50%;
+    width: 300px;
+    height: 200px;
+    margin-left: -150px;
+    margin-top: -100px;
+    line-height: 200px;
+    font-size: 35px;
+    text-align: center;
+    font-weight: bold;
+     z-index: 1;
+}
+#red, #green, #blue{
+    position: relative;
+    color: #FFFFFF;
+    height: 375px;
+    cursor: pointer;
+    float:left;
+    overflow: hidden;
+    width: 33.33%;
+}
+#red {
+    background: none repeat scroll 0 0 #ff0000;
+    text-shadow: -1px -1px 0 #dd0000, 1px -1px 0 #dd0000, -1px 1px 0 #dd0000, 1px 1px 0 #dd0000;
+}
+#green {
+    background: none repeat scroll 0 0 #00ff00;
+    text-shadow: -1px -1px 0 #00dd00, 1px -1px 0 #00dd00, -1px 1px 0 #00dd00, 1px 1px 0 #00dd00;
+}
+#blue {
+    background: none repeat scroll 0 0 #0000ff;
+    text-shadow: -1px -1px 0 #0000dd, 1px -1px 0 #0000dd, -1px 1px 0 #0000dd, 1px 1px 0 #0000dd;
+}
+#imagesSlider {
+    width: 100%;
+    position: relative;
+    padding-top: 30px;
+    clear:both;
+}
+#imagesOverflow{
+    overflow: hidden;
+    width: 320px;
+    margin: 0 auto;
+}
+#imagesContainer {
+    cursor: pointer;
+    transition: margin 200ms ease 0s;
+    width: 2000px;
+}
+#imagesContainer img {
+    border: 0 none;
+    width: 320px;
+    display: block;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+#userTouchpad, #changeImgTouchpad{
+    display: none;
+}
+
+
+/*smartphone*/
+@media screen 
+and (min-width : 320px) 
+and (max-width : 568px) {
+    #red, #green, #blue{
+        width: 100%;
+    }
+    #connectBar{
+        padding: 10px 0;
+        height: auto;
+    }
+    #connect{
+        width: 100%;
+        float: none;
+        margin: 30px 0px;
+        margin-bottom: 0px;
+    }
+    #connectLabel{
+        line-height: normal;
+        text-align: center;
+        float: none;
+    }
+}

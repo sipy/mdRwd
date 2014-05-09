@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+	<title>Sample - mdRwd</title>	
+	<meta charset="utf-8"/>
+        <meta name="robots" content="noodp, noydir"/>
+        <meta name="apple-mobile-web-app-title" content="Sample"/>
+        <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/> 
+	<meta name="viewport" content="width=device-width, height=device-height, user-scalable=0, initial-scale=1, maximum-scale=1, minimum-scale=1"/>        
+        <meta property="og:title" content="Sample - mdRwd" />
+	<meta property="og:description" content="A framework for development of Web applications partitioned in different communicating devices." />
+	<meta property="og:url" content="http://www.mdrwd.org/demo/sample" />
+	<meta property="og:image" content="http://www.mdrwd.org/mdRwd/lib/img/mdRwdLogo500.png" />
+	<meta name="keywords" content="mdRwd, rwd, responsive web design, multi-device, demo"/>
+	<meta name="description" content="A framework for development of Web applications partitioned in different communicating devices."/>
+        <link rel="img_src" href="http://www.mdrwd.org/mdRwd/lib/img/mdRwdLogo500.png"/>
+	<link rel="apple-touch-icon-precomposed" href="http://www.mdrwd.org/mdRwd/lib/img/mdRwdLogo500.png"/>  
+	<link rel="icon" href="http://www.mdrwd.org/mdRwd/lib/img/favicon.ico" type="image/x-icon"/>
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,600,700" rel="stylesheet" />
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'/>
+        <!-- mdRwd css (required) -->
+	<link rel="stylesheet" href="../../lib/css/jquery.mdRwd.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href="css/index.css" type="text/css" media="screen"/>
+	<!-- jquery (required) -->
+	<script src="js/jquery.min.js"></script>	
+	<!-- jquery hummer plugin (required for touch gestures events) -->
+        <script src="js/jquery.hammer.js" type="text/javascript"></script>
+	<!-- jquery mdRwd plugin (required) -->
+        <script src="../../lib/js/jquery.mdRwd.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	var mdRwd, logNumber, currentLeft, imgWidth, imgContainerWidth, usersData, moveX, previousMoveX, timer, sensibility, usersBarState, rgbContainerState, imagesSliderState;
+	
+	$(document).ready(function() {
+	    logNumber = 0;
+	    moveX = 0;
+	    currentLeft = 0;
+	    imgWidth = $("#imagesOverflow").width();
+	    imgContainerWidth = $("#imagesContainer img").length * imgWidth;
+	    usersData = {};
+	    previousMoveX = 0;
+	    sensibility = 14;
+	    timer = null;
+	    //set initial components state objects
+	    usersBarState = {"usersBarHTML": $("#usersBar").html(), "usersData": usersData};
+	    rgbContainerState = {"rgbContainerHTML": $("#rgbContainer").html()};
+	    imagesSliderState = {"currentLeft": currentLeft};
+	    
+	    mdRwd = $("#connect").mdRwd({
+		"ip": "192.168.1.102",
+		"port": "9000",
+		"debug": true,
+		"stateful": true,
+		"autoManageStates": true,
+		"html": {
+		    "connectButton": "CONNECT",
+		    "disconnectButton": "DISCONNECT",
+		    "window": {
+			"header": {
+			    "title": "Pair device",
+			    "close": "Close"
+			},
+			"content": {
+			    "layoutsLabel": "Connect as...",
+			    "vcLabel": "Pairing ID",
+			    "connectVcLabel": "ID to pair with",
+			    "connectVcButton": "Pair"
+			}
+		    }
+		},
+		"components": {
+		    "usersBar": {"selector": "#usersBar", "state": usersBarState},
+		    "rgbContainer": {"selector": "#rgbContainer", "state": rgbContainerState},
+		    "userTouchpad": {"selector": "#userTouchpad"},
+		    "changeImgTouchpad": {"selector": "#changeImgTouchpad"},
+		    "imagesSlider": {"selector": "#imagesSlider", "state": imagesSliderState}
+		},
+		"layouts": {
+		    "main": {
+			"mdRwdOnMonoDeviceMode": monoDevice,
+			"components": "usersBar, rgbContainer, imagesSlider",
+			"devices": "desktop, tablet",
+			"html": {
+			    "name": "Large Screen",
+			    "description": "(visualize the large screen interface)"
+			},
+			"connectionTypes": "newVc, connVc",
+			"css": "css/main.css",
+			"events": {
+			    "incoming": {
+				"mdRwd": {
+				    "connVc": newUser,
+				    "rmVcClient": removeUser
+				},
+				"custom": {
+				    "moveUser": moveUser,
+				    "moveUserStart": moveUserStart,
+				    "redTap": addRedTapLog,
+				    "greenTap": addGreenTapLog,
+				    "blueTap": addBlueTapLog
+				}
+			    },
+			    "outgoing": {
+				"custom": "changeRemoteColorArea"
+			    }
+			}
+		    },
+		    "log": {
+			"mdRwdOnMonoDeviceMode": monoDevice,
+			"components": "usersBar, rgbContainer",
+			"devices": "desktop, tablet",
+			"connectionTypes": "newVc, connVc",
+			"hidden": true,
+			"css": "css/log.css",
+			"events": {
+			    "incoming": {
+				"mdRwd": {
+				    "connVc": newUser,
+				    "rmVcClient": removeUser
+				},
+				"custom": {
+				    "moveUser": moveUser,
+				    "moveUserStart": moveUserStart,
+				    "redTap": addRedTapLog,
+				    "greenTap": addGreenTapLog,
+				    "blueTap": addBlueTapLog
+				}
+			    },
+			    "outgoing": {
+				"custom": "changeRemoteColorArea"
+			    }
+			}
+		    },
+		    "pictures": {
+			"mdRwdOnMonoDeviceMode": monoDevice,
+			"components": "imagesSlider",
+			"devices": "desktop, tablet",
+			"connectionTypes": "newVc, connVc",
+			"hidden": true,
+			"css": "css/pictures.css",
+			"events": {
+			    "incoming": {
+				"mdRwd": {
+				    "connVc": newUser,
+				    "rmVcClient": removeUser
+				}
+			    },
+			    "outgoing": {
+				"custom": "changeRemoteColorArea"
+			    }
+			}
+		    },
+		    "control": {
+			"mdRwdOnMonoDeviceMode": monoDevice,
+			"components": "userTouchpad, rgbContainer, changeImgTouchpad",
+			"devices": "smartphone, tablet",
+			"connectionTypes": "connVc",
+			"html": {
+			    "name": "Mobile Device",
+			    "description": "(connect as a remote control user)"
+			},
+			"css": "css/control.css",
+			"events": {
+			    "incoming": {
+				"custom": {
+				    "changeRemoteColorArea": changeLocalColorArea
+				}
+			    },
+			    "outgoing": {
+				"custom": "moveUser(usersBar), moveUserStart(usersBar), redTap(rgbContainer), greenTap(rgbContainer), blueTap(rgbContainer)"
+			    }
+			}
+		    }
+		}
+	    });
+	    
+	    //application logic
+
+	    $(document).hammer().on("tap", "#rgbContainer #red", function() {
+		logNumber++;
+		$("#rgbContainer #red .events").prepend('<div class="event">#' + logNumber + ' Local click/tap</div>');
+		if(mdRwd && mdRwd.getMyLayout().id == "control") mdRwd.triggerVcEvent({"type": "redTap"});
+	    });
+
+	    $(document).hammer().on("tap", "#rgbContainer #green", function() {
+		logNumber++;
+		$("#rgbContainer #green .events").prepend('<div class="event">#' + logNumber + ' Local click/tap</div>');
+		if(mdRwd && mdRwd.getMyLayout().id == "control") mdRwd.triggerVcEvent({"type": "greenTap"});
+	    });
+	    
+	    $(document).hammer().on("tap", "#rgbContainer #blue", function() {
+		logNumber++;
+		$("#rgbContainer #blue .events").prepend('<div class="event">#' + logNumber + ' Local click/tap</div>');
+		if(mdRwd && mdRwd.getMyLayout().id == "control") mdRwd.triggerVcEvent({"type": "blueTap"});
+	    });
+
+	    $(document).hammer().on("tap", "#imagesContainer", function() {
+		changePicture();
+	    });
+
+	    $(document).hammer({"drag_max_touches" : 0, "prevent_default": true}).on("touch", "#userTouchpad", function() {
+		if (mdRwd) mdRwd.triggerVcEvent({"type": "moveUserStart"});
+		moveUserInterval();
+		timer = setInterval("moveUserInterval()", 100);
+	    });
+
+	    $(document).hammer({"drag_max_touches" : 0, "prevent_default": true}).on("drag", "#userTouchpad", function(ev) { 
+		moveX = ev.gesture.deltaX;
+	    });
+
+	    $(document).hammer({"drag_max_touches" : 0, "prevent_default": true}).on("release", "#userTouchpad", function() {
+		clearInterval(timer); 
+	    });
+	   	    
+	});
+
+	function monoDevice() { 
+	    if(mdRwd.getMyLayout().id == "control") {
+		$(".colorArea").show();
+	    }else{
+		$("#connectLabel").html("Click on connect button to pair a device.");
+		$('.genericUser').remove();
+		usersData = {};
+	    }
+	}
+
+	function newUser(e) { 
+	    $("#connectLabel").html("Pair a device using this ID: " + e.vcId); 
+	    if ((mdRwd.getMyLayout().id == "main" || mdRwd.getMyLayout().id == "log") 
+		 && e.client.layout.id == "control") {
+		usersData[e.client.id] = {"previousColorArea": "red", "previousLeftOffset": 0, "userColor": '#' + Math.floor(Math.random() * 16777215).toString(16)};
+		$("#usersBar").append('<div id="user' + e.client.id + '" class="genericUser"></div>');
+		$('#user' + e.client.id).css("border-bottom-color", usersData[e.client.id].userColor);
+		usersBarState.usersBarHTML = $("#usersBar").html();
+		usersBarState.usersData = usersData;
+	    }
+	    if (e.client.layout.id == "main") {
+		if (e.vcLayouts.main.instances.length == 2) {
+		    if (e.vcLayouts.main.instances[0] == mdRwd.getMyId()) {
+			mdRwd.changeLayout("log");
+		    }
+		    if (e.vcLayouts.main.instances[1] == mdRwd.getMyId()) {
+			mdRwd.changeLayout("pictures");
+			changePicture();
+		    }
+		}
+	    }
+	}
+
+	function removeUser(e) {
+	    delete usersData[e.client.id];
+	    $('#user' + e.client.id).remove(); 
+	    if ($.isEmptyObject(usersData)) {
+		$("#connectLabel").html("All devices are disconnected. Pair a device using the following code: " + e.vcId); //show this message
+	    }
+	    if (e.client.layout.id == "log" || e.client.layout.id == "pictures") {
+		mdRwd.changeLayout("main");
+		usersData = usersBarState.usersData;
+		$("#usersBar").html(usersBarState.usersBarHTML);
+		$("#rgbContainer").html(rgbContainerState.rgbContainerHTML);
+		changePicture();
+	    }
+	}
+
+	function addRedTapLog(e) {
+	    logNumber++;
+	    $("#rgbContainer #red .events").prepend('<div class="event" style="border-color:' + usersData[e.client.id].userColor + '">#' + logNumber + ' Remote tap from User ' + e.client.id + '</div>');
+	    rgbContainerState.rgbContainerHTML = $("#rgbContainer").html();
+	}
+
+	function addGreenTapLog(e) {
+	    logNumber++;
+	    $("#rgbContainer #green .events").prepend('<div class="event" style="border-color:' + usersData[e.client.id].userColor + '">#' + logNumber + ' Remote tap from User ' + e.client.id + '</div>');
+	    rgbContainerState.rgbContainerHTML = $("#rgbContainer").html();
+	}
+
+	function addBlueTapLog(e) {
+	    logNumber++;
+	    $("#rgbContainer #blue .events").prepend('<div class="event" style="border-color:' + usersData[e.client.id].userColor + '">#' + logNumber + ' Remote tap from User ' + e.client.id + '</div>');
+	    rgbContainerState.rgbContainerHTML = $("#rgbContainer").html();
+	}
+
+	function changePicture() {
+	    newLeft = currentLeft - imgWidth;
+	    if (newLeft <= -imgContainerWidth) {
+		newLeft = 0;
+	    }
+	    $("#imagesContainer").css("margin-left", newLeft + "px");
+	    currentLeft = newLeft;
+	}
+	
+	function moveUser(e) {
+	    userId = e.client.id;
+	    userWidh = $('#user' + e.client.id).width();
+	    windowWidth = $(window).width();
+	    moveX = e.eventData.moveX;
+
+	    userLeftOffset = parseInt(usersData[userId].previousLeftOffset) + parseInt(moveX * sensibility);
+	    userLeftOffset = userLeftOffset <= 0 ? 0 : (userLeftOffset >= (windowWidth - userWidh) ? (windowWidth - userWidh) : userLeftOffset);
+	    if (userLeftOffset <= windowWidth / 3 - userWidh / 2) {
+		changeRemoteColorArea("red", userId); 
+	    }else if (userLeftOffset > windowWidth / 3 - userWidh / 2 && userLeftOffset <= windowWidth * 2 / 3  - userWidh / 2) {
+		changeRemoteColorArea("green", userId);
+	    }else if (userLeftOffset > windowWidth * 2 / 3 - userWidh / 2 && userLeftOffset <= windowWidth - userWidh) {
+		changeRemoteColorArea("blue", userId); 
+	    }
+	    
+	    $('#user' + e.client.id).css("left", userLeftOffset + "px");
+	    usersBarState.usersBarHTML = $("#usersBar").html();
+	    usersBarState.usersData = usersData;
+	}
+	
+	function changeRemoteColorArea(colorArea, userId) {
+	    if(colorArea != usersData[userId].previousColorArea){
+		var ev = {"type": "changeRemoteColorArea", "eventData": {"colorArea": colorArea, "userId": userId}};
+		if (mdRwd) mdRwd.triggerVcEvent(ev);
+		usersData[userId].previousColorArea = colorArea;
+	    }
+	}
+
+	function moveUserInterval() {
+	    if (moveX != previousMoveX){
+		var ev = {"type": "moveUser", "eventData": {"moveX": moveX}};
+		if (mdRwd) mdRwd.triggerVcEvent(ev); 
+		previousMoveX = moveX;
+	    }
+	}
+	
+	function changeLocalColorArea(e) {
+	    if (e.eventData.userId == mdRwd.getMyId()) {
+		$(".colorArea").hide();
+		$("#"+e.eventData.colorArea).show();
+	    }
+	}
+
+	function moveUserStart(e) {
+	    usersData[e.client.id].previousLeftOffset = $('#user' + e.client.id).css("left");
+	}
+    </script>
+    </head>
+    <body>
+	<div id="connectBar">
+	    <div id="connectLabel">Click on the connect button to pair a device.</div>
+	    <div id="connect">CONNECT</div>
+	</div>
+	<div id="usersBar"></div>
+	<div id="userTouchpad">
+	    <img src="img/touchpad.png"/>
+	</div>
+	<div id="rgbContainer">
+	    <div id="red" class="colorArea"><div class="events"></div><div class="clickHere">CLICK OR TAP HERE</div></div>
+	    <div id="green" class="colorArea"><div class="events"></div><div class="clickHere">CLICK OR TAP HERE</div></div>
+	    <div id="blue" class="colorArea"><div class="events"></div><div class="clickHere">CLICK OR TAP HERE</div></div>
+	</div>
+	<div id="imagesSlider">
+	    <div id="imagesOverflow">
+		<div id="imagesContainer">
+		    <img src="img/1.jpg" />
+		    <img src="img/2.jpg" />
+		    <img src="img/3.jpg" />	
+		    <img src="img/4.jpg" />
+		</div>
+	    </div>
+	</div>
+	<div id="changeImgTouchpad">Change Picture</div>
+    </body>
+</html>

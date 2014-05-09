@@ -1,0 +1,38 @@
+#connectLabel{
+    display: none;
+}
+#connectBar{
+    margin: 0px;
+    padding: 0px;
+}
+#connect{
+    margin: 0px;
+}
+#rgbContainer{
+    position: absolute;
+    bottom: 100px;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+#red, #green, #blue{
+    height: 300px;
+}
+#userTouchpad img{
+    vertical-align: middle;
+}
+#userTouchpad{
+    width: 100%;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+}
+#changeImgTouchpad{
+    background: white;
+    height: 100px;
+    left: 0;
+    color:black;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
