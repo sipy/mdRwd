@@ -29,7 +29,7 @@
 	<!-- jquery mdRwd plugin (required) -->
         <script src="../../lib/js/jquery.mdRwd.js" type="text/javascript"></script>
 	<script type="text/javascript">
-	var mdRwd, logNumber, currentLeft, imgWidth, imgContainerWidth, usersData, moveX, previousMoveX, timer, sensibility, usersBarState, rgbContainerState, imagesSliderState;
+	var mdRwd, logNumber, currentLeft, imgWidth, imgContainerWidth, usersData, moveX, previousMoveX, timer, sensibility, usersBarState, rgbContainerState;
 	
 	$(document).ready(function() {
 	    logNumber = 0;
@@ -44,14 +44,12 @@
 	    //set initial components state objects
 	    usersBarState = {"usersBarHTML": $("#usersBar").html(), "usersData": usersData};
 	    rgbContainerState = {"rgbContainerHTML": $("#rgbContainer").html()};
-	    imagesSliderState = {"currentLeft": currentLeft};
 	    
 	    mdRwd = $("#connect").mdRwd({
 		"ip": "192.168.1.102",
 		"port": "9000",
 		"debug": true,
 		"stateful": true,
-		"autoManageStates": true,
 		"html": {
 		    "connectButton": "CONNECT",
 		    "disconnectButton": "DISCONNECT",
@@ -71,14 +69,12 @@
 		"components": {
 		    "usersBar": {"selector": "#usersBar", "state": usersBarState},
 		    "rgbContainer": {"selector": "#rgbContainer", "state": rgbContainerState},
-		    "userTouchpad": {"selector": "#userTouchpad"},
-		    "changeImgTouchpad": {"selector": "#changeImgTouchpad"},
-		    "imagesSlider": {"selector": "#imagesSlider", "state": imagesSliderState}
+		    "userTouchpad": {"selector": "#userTouchpad"}
 		},
 		"layouts": {
 		    "main": {
 			"mdRwdOnMonoDeviceMode": monoDevice,
-			"components": "usersBar, rgbContainer, imagesSlider",
+			"components": "usersBar, rgbContainer",
 			"devices": "desktop, tablet",
 			"html": {
 			    "name": "Large Screen",
@@ -105,54 +101,9 @@
 			    }
 			}
 		    },
-		    "log": {
-			"mdRwdOnMonoDeviceMode": monoDevice,
-			"components": "usersBar, rgbContainer",
-			"devices": "desktop, tablet",
-			"connectionTypes": "newVc, connVc",
-			"hidden": true,
-			"css": "css/log.css",
-			"events": {
-			    "incoming": {
-				"mdRwd": {
-				    "connVc": newUser,
-				    "rmVcClient": removeUser
-				},
-				"custom": {
-				    "moveUser": moveUser,
-				    "moveUserStart": moveUserStart,
-				    "redTap": addRedTapLog,
-				    "greenTap": addGreenTapLog,
-				    "blueTap": addBlueTapLog
-				}
-			    },
-			    "outgoing": {
-				"custom": "changeRemoteColorArea"
-			    }
-			}
-		    },
-		    "pictures": {
-			"mdRwdOnMonoDeviceMode": monoDevice,
-			"components": "imagesSlider",
-			"devices": "desktop, tablet",
-			"connectionTypes": "newVc, connVc",
-			"hidden": true,
-			"css": "css/pictures.css",
-			"events": {
-			    "incoming": {
-				"mdRwd": {
-				    "connVc": newUser,
-				    "rmVcClient": removeUser
-				}
-			    },
-			    "outgoing": {
-				"custom": "changeRemoteColorArea"
-			    }
-			}
-		    },
 		    "control": {
 			"mdRwdOnMonoDeviceMode": monoDevice,
-			"components": "userTouchpad, rgbContainer, changeImgTouchpad",
+			"components": "userTouchpad, rgbContainer",
 			"devices": "smartphone, tablet",
 			"connectionTypes": "connVc",
 			"html": {
@@ -194,10 +145,6 @@
 		if(mdRwd && mdRwd.getMyLayout().id == "control") mdRwd.triggerVcEvent({"type": "blueTap"});
 	    });
 
-	    $(document).hammer().on("tap", "#imagesContainer", function() {
-		changePicture();
-	    });
-
 	    $(document).hammer({"drag_max_touches" : 0, "prevent_default": true}).on("touch", "#userTouchpad", function() {
 		if (mdRwd) mdRwd.triggerVcEvent({"type": "moveUserStart"});
 		moveUserInterval();
@@ -226,25 +173,11 @@
 
 	function newUser(e) { 
 	    $("#connectLabel").html("Pair a device using this ID: " + e.vcId); 
-	    if ((mdRwd.getMyLayout().id == "main" || mdRwd.getMyLayout().id == "log") 
-		 && e.client.layout.id == "control") {
-		usersData[e.client.id] = {"previousColorArea": "red", "previousLeftOffset": 0, "userColor": '#' + Math.floor(Math.random() * 16777215).toString(16)};
-		$("#usersBar").append('<div id="user' + e.client.id + '" class="genericUser"></div>');
-		$('#user' + e.client.id).css("border-bottom-color", usersData[e.client.id].userColor);
-		usersBarState.usersBarHTML = $("#usersBar").html();
-		usersBarState.usersData = usersData;
-	    }
-	    if (e.client.layout.id == "main") {
-		if (e.vcLayouts.main.instances.length == 2) {
-		    if (e.vcLayouts.main.instances[0] == mdRwd.getMyId()) {
-			mdRwd.changeLayout("log");
-		    }
-		    if (e.vcLayouts.main.instances[1] == mdRwd.getMyId()) {
-			mdRwd.changeLayout("pictures");
-			changePicture();
-		    }
-		}
-	    }
+	    usersData[e.client.id] = {"previousColorArea": "red", "previousLeftOffset": 0, "userColor": '#' + Math.floor(Math.random() * 16777215).toString(16)};
+	    $("#usersBar").append('<div id="user' + e.client.id + '" class="genericUser"></div>');
+	    $('#user' + e.client.id).css("border-bottom-color", usersData[e.client.id].userColor);
+	    usersBarState.usersBarHTML = $("#usersBar").html();
+	    usersBarState.usersData = usersData;
 	}
 
 	function removeUser(e) {
@@ -252,13 +185,6 @@
 	    $('#user' + e.client.id).remove(); 
 	    if ($.isEmptyObject(usersData)) {
 		$("#connectLabel").html("All devices are disconnected. Pair a device using the following code: " + e.vcId); //show this message
-	    }
-	    if (e.client.layout.id == "log" || e.client.layout.id == "pictures") {
-		mdRwd.changeLayout("main");
-		usersData = usersBarState.usersData;
-		$("#usersBar").html(usersBarState.usersBarHTML);
-		$("#rgbContainer").html(rgbContainerState.rgbContainerHTML);
-		changePicture();
 	    }
 	}
 
@@ -280,15 +206,6 @@
 	    rgbContainerState.rgbContainerHTML = $("#rgbContainer").html();
 	}
 
-	function changePicture() {
-	    newLeft = currentLeft - imgWidth;
-	    if (newLeft <= -imgContainerWidth) {
-		newLeft = 0;
-	    }
-	    $("#imagesContainer").css("margin-left", newLeft + "px");
-	    currentLeft = newLeft;
-	}
-	
 	function moveUser(e) {
 	    userId = e.client.id;
 	    userWidh = $('#user' + e.client.id).width();
@@ -352,16 +269,5 @@
 	    <div id="green" class="colorArea"><div class="events"></div><div class="clickHere">CLICK OR TAP HERE</div></div>
 	    <div id="blue" class="colorArea"><div class="events"></div><div class="clickHere">CLICK OR TAP HERE</div></div>
 	</div>
-	<div id="imagesSlider">
-	    <div id="imagesOverflow">
-		<div id="imagesContainer">
-		    <img src="img/1.jpg" />
-		    <img src="img/2.jpg" />
-		    <img src="img/3.jpg" />	
-		    <img src="img/4.jpg" />
-		</div>
-	    </div>
-	</div>
-	<div id="changeImgTouchpad">Change Picture</div>
     </body>
 </html>

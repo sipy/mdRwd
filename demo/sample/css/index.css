@@ -107,31 +107,7 @@ body {
     background: none repeat scroll 0 0 #0000ff;
     text-shadow: -1px -1px 0 #0000dd, 1px -1px 0 #0000dd, -1px 1px 0 #0000dd, 1px 1px 0 #0000dd;
 }
-#imagesSlider {
-    width: 100%;
-    position: relative;
-    padding-top: 30px;
-    clear:both;
-}
-#imagesOverflow{
-    overflow: hidden;
-    width: 320px;
-    margin: 0 auto;
-}
-#imagesContainer {
-    cursor: pointer;
-    transition: margin 200ms ease 0s;
-    width: 2000px;
-}
-#imagesContainer img {
-    border: 0 none;
-    width: 320px;
-    display: block;
-    float: left;
-    margin: 0;
-    padding: 0;
-}
-#userTouchpad, #changeImgTouchpad{
+#userTouchpad{
     display: none;
 }
 

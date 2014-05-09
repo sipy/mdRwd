@@ -27,12 +27,3 @@
     line-height: 100px;
     text-align: center;
 }
-#changeImgTouchpad{
-    background: white;
-    height: 100px;
-    left: 0;
-    color:black;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
