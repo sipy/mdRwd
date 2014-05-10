@@ -43,7 +43,7 @@
 	    rgbContainerState = {"rgbContainerHTML": $("#rgbContainer").html(), "logNumber": 0};
 	    
 	    mdRwd = $("#connect").mdRwd({
-		"ip": "149.132.157.136",
+		"ip": "192.168.1.102",//149.132.157.136, 192.168.1.102
 		"port": "9000",
 		"debug": true,
 		"stateful": true,
@@ -180,7 +180,7 @@
 	    });
 
 	    $(document).hammer().on("drag", "#userTouchpad", function(ev) { 
-		ev.preventDefault();
+		ev.gesture.preventDefault();
 		leftOffset = ev.gesture.deltaX;
 	    });
 
