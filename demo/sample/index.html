@@ -171,20 +171,19 @@
 		}
 	    });
 
-	    $(document).hammer({"drag_max_touches" : 0}).on("touch", "#userTouchpad", function() {
+	    $(document).hammer().on("touch", "#userTouchpad", function() {
 		if (mdRwd && mdRwd.getMyLayout().id == "control"){
 		    mdRwd.triggerVcEvent({"type": "moveUserStart"});
 		    moveUserInterval();
-		    timer = setInterval("moveUserInterval()", 100);
+		    timer = setInterval("moveUserInterval()", 50);
 		}
 	    });
 
-	    $(document).hammer({"drag_max_touches" : 0}).on("drag", "#userTouchpad", function(ev) { 
-		ev.preventDefault();
+	    $(document).hammer().on("drag", "#userTouchpad", function(ev) { 
 		leftOffset = ev.gesture.deltaX;
 	    });
 
-	    $(document).hammer({"drag_max_touches" : 0}).on("release", "#userTouchpad", function() {
+	    $(document).hammer().on("release", "#userTouchpad", function() {
 		clearInterval(timer); 
 	    });
 	   	    
@@ -263,16 +262,16 @@
 	
 	function changeRemoteColorArea(colorArea, userId) {
 	    if(colorArea != usersData[userId].previousColorArea){
-		var ev = {"type": "changeRemoteColorArea", "eventData": {"colorArea": colorArea, "userId": userId}};
-		mdRwd.triggerVcEvent(ev);
+		var changeRemoteColorAreaEvent = {"type": "changeRemoteColorArea", "eventData": {"colorArea": colorArea, "userId": userId}};
+		mdRwd.triggerVcEvent(changeRemoteColorAreaEvent);
 		usersData[userId].previousColorArea = colorArea;
 	    }
 	}
 
 	function moveUserInterval() {
 	    if (leftOffset != previousLeftOffset){
-		var ev = {"type": "moveUser", "eventData": {"leftOffset": leftOffset}};
-		mdRwd.triggerVcEvent(ev); 
+		var moveUserEvent = {"type": "moveUser", "eventData": {"leftOffset": leftOffset}};
+		mdRwd.triggerVcEvent(moveUserEvent); 
 		previousLeftOffset = leftOffset;
 	    }
 	}
