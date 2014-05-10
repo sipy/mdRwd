@@ -2,58 +2,56 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
+    height: 100%;
 }
 body {
     font-family: "Open sans",Arial,sans-serif;
+    font-size: 100%;
+}
+#usersBar, #userTouchpad, #layoutMainLabel, #layoutControlLabel{
+    display: none;
 }
 #connectBar{
-    height: 70px;
-    margin: 30px 0;
+    height: 8.5%;
 }
 #connectLabel{
-    padding: 0 10px;
-    font-size: 25px;
-    line-height: 70px;
+    font-size: 1.5em;
+    font-weight: 600;
+    height: 100%;
+    position: relative;
     float: left;
+    width: 66.66%;
 }
 #connect {
     background: #ffdd00;
     text-shadow: -1px -1px 0 #ffcc00, 1px -1px 0 #ffcc00, -1px 1px 0 #ffcc00, 1px 1px 0 #ffcc00;
     color: #fff;
     cursor: pointer;
-    padding: 10px 0;
     text-align: center;
     float: right;
      font-family: "Open sans condensed",Arial,sans-serif;
-    font-size: 35px;
+    font-size: 2.2em;
     font-weight: bold;
     margin: 0;
-    width: 250px;
-    height: 50px;
+    width: 33.33%;
+    height: 100%;
+    position: relative;
 }
 #connect:hover {
    opacity: 0.5; 
 }
-#usersBar {
-    background: #EEEEEE;
-    height: 30px;
-    clear: both;
-    display: none;
-    text-align: center;
-    width: 100%;
-    position: relative;
-}
-.genericUser {
-    background: url("../img/user.png") 50% 50%;
-    border-bottom: 8px solid #000;
-    height: 30px;
+.verticalCenter{
     position: absolute;
-    width: 20px;
-    z-index: 2;
-    left: 0;
+    top: 50%;
+    height: 50px;
+    line-height: 50px;
+    width: 100%;
+    text-align: center;
+    margin-top: -25px;
 }
 #rgbContainer{
     position: relative;
+    height: 91.5%;
 }
 #rgbContainer .event {
     margin: 10px;
@@ -71,25 +69,17 @@ body {
     z-index: 2;
     position: relative;
 }
-.clickHere, .tapHere{
-    position: absolute;
-    top:50%;
+.clickHere{
     font-family: "Open sans condensed",Arial,sans-serif;
-    left:50%;
-    width: 300px;
-    height: 200px;
-    margin-left: -150px;
-    margin-top: -100px;
-    line-height: 200px;
-    font-size: 35px;
+    font-size: 2.2em;
     text-align: center;
     font-weight: bold;
-     z-index: 1;
+    z-index: 1;
 }
 #red, #green, #blue{
     position: relative;
     color: #FFFFFF;
-    height: 375px;
+    height: 100%;
     cursor: pointer;
     float:left;
     overflow: hidden;
@@ -107,27 +97,41 @@ body {
     background: none repeat scroll 0 0 #0000ff;
     text-shadow: -1px -1px 0 #0000dd, 1px -1px 0 #0000dd, -1px 1px 0 #0000dd, 1px 1px 0 #0000dd;
 }
-#userTouchpad{
-    display: none;
-}
 
 
 /*smartphone*/
 @media screen 
 and (min-width : 320px) 
 and (max-width : 568px) {
+    html, body{
+        height: 100%;
+    }
+    #rgbContainer {
+        height: 180%;
+    }
     #red, #green, #blue{
         width: 100%;
+        height: 33.33%;
     }
     #connectBar{
-        padding: 10px 0;
-        height: auto;
+        padding:  0px;
+        height: 40%;
+        margin: 0px;
+    }
+    #connectLabel{
+        width: 100%;
+        height: 62.5%;
+    }
+    #connectLabel .verticalCenter{
+        height: 60px;
+        line-height: normal;
+        margin-top: -30px;
     }
     #connect{
         width: 100%;
-        float: none;
-        margin: 30px 0px;
-        margin-bottom: 0px;
+        margin: 0px;
+        height: 37.5%;
+        padding: 0px;
     }
     #connectLabel{
         line-height: normal;

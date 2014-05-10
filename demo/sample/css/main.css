@@ -1,0 +1,34 @@
+#layoutMainLabel{
+    display: block;
+    clear: both;
+    height: 35%;
+    background: #FFEFAE;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    position: relative;
+    font-family: "Open sans condensed",Arial,sans-serif;
+    font-size: 2.2em;
+    position: relative;
+}
+#usersBar {
+    background: #eee;
+    height: 5%;
+    clear: both;
+    text-align: center;
+    width: 100%;
+    position: relative;
+}
+.genericUser {
+    background: url("../img/user.png") 50% 50% no-repeat;
+    height: 97%;
+    position: absolute;
+    padding: 0 10px;
+    border: 1px solid #bbb;
+    width: 20px;
+    z-index: 2;
+    left: 0;
+}
+#rgbContainer{
+    height: 51.5%;
+}

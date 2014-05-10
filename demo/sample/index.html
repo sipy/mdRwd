@@ -29,21 +29,18 @@
 	<!-- jquery mdRwd plugin (required) -->
         <script src="../../lib/js/jquery.mdRwd.js" type="text/javascript"></script>
 	<script type="text/javascript">
-	var mdRwd, logNumber, currentLeft, imgWidth, imgContainerWidth, usersData, moveX, previousMoveX, timer, sensibility, usersBarState, rgbContainerState;
+	var mdRwd, usersData, leftOffset, previousLeftOffset, timer, moveUserSensibility, usersBarState, rgbContainerState;
 	
 	$(document).ready(function() {
-	    logNumber = 0;
-	    moveX = 0;
-	    currentLeft = 0;
-	    imgWidth = $("#imagesOverflow").width();
-	    imgContainerWidth = $("#imagesContainer img").length * imgWidth;
 	    usersData = {};
-	    previousMoveX = 0;
-	    sensibility = 14;
+	    leftOffset = 0;
+	    previousLeftOffset = 0;
+	    moveUserSensibility = 14;
 	    timer = null;
+	    
 	    //set initial components state objects
 	    usersBarState = {"usersBarHTML": $("#usersBar").html(), "usersData": usersData};
-	    rgbContainerState = {"rgbContainerHTML": $("#rgbContainer").html()};
+	    rgbContainerState = {"rgbContainerHTML": $("#rgbContainer").html(), "logNumber": 0};
 	    
 	    mdRwd = $("#connect").mdRwd({
 		"ip": "192.168.1.102",
@@ -51,8 +48,8 @@
 		"debug": true,
 		"stateful": true,
 		"html": {
-		    "connectButton": "CONNECT",
-		    "disconnectButton": "DISCONNECT",
+		    "connectButton": '<div class="verticalCenter">CONNECT</div>',
+		    "disconnectButton": '<div class="verticalCenter">DISCONNECT</div>',
 		    "window": {
 			"header": {
 			    "title": "Pair device",
@@ -69,12 +66,14 @@
 		"components": {
 		    "usersBar": {"selector": "#usersBar", "state": usersBarState},
 		    "rgbContainer": {"selector": "#rgbContainer", "state": rgbContainerState},
-		    "userTouchpad": {"selector": "#userTouchpad"}
+		    "userTouchpad": {"selector": "#userTouchpad"},
+		    "layoutMainLabel": {"selector": "#layoutMainLabel"},
+		    "layoutControlLabel": {"selector": "#layoutControlLabel"}
 		},
 		"layouts": {
 		    "main": {
 			"mdRwdOnMonoDeviceMode": monoDevice,
-			"components": "usersBar, rgbContainer",
+			"components": "usersBar, rgbContainer, layoutMainLabel",
 			"devices": "desktop, tablet",
 			"html": {
 			    "name": "Large Screen",
@@ -88,12 +87,14 @@
 				    "connVc": newUser,
 				    "rmVcClient": removeUser
 				},
+				"touch": {
+				    "pinchin": zoom,
+				    "pinchout": zoom
+				},
 				"custom": {
 				    "moveUser": moveUser,
 				    "moveUserStart": moveUserStart,
-				    "redTap": addRedTapLog,
-				    "greenTap": addGreenTapLog,
-				    "blueTap": addBlueTapLog
+				    "tapColorArea": addTapLog
 				}
 			    },
 			    "outgoing": {
@@ -103,7 +104,7 @@
 		    },
 		    "control": {
 			"mdRwdOnMonoDeviceMode": monoDevice,
-			"components": "userTouchpad, rgbContainer",
+			"components": "userTouchpad, rgbContainer, layoutControlLabel",
 			"devices": "smartphone, tablet",
 			"connectionTypes": "connVc",
 			"html": {
@@ -118,7 +119,8 @@
 				}
 			    },
 			    "outgoing": {
-				"custom": "moveUser(usersBar), moveUserStart(usersBar), redTap(rgbContainer), greenTap(rgbContainer), blueTap(rgbContainer)"
+				"touch": "pinchin, pinchout",
+				"custom": "moveUser(usersBar), moveUserStart(usersBar), tapColorArea(rgbContainer)"
 			    }
 			}
 		    }
@@ -127,35 +129,62 @@
 	    
 	    //application logic
 
-	    $(document).hammer().on("tap", "#rgbContainer #red", function() {
-		logNumber++;
-		$("#rgbContainer #red .events").prepend('<div class="event">#' + logNumber + ' Local click/tap</div>');
-		if(mdRwd && mdRwd.getMyLayout().id == "control") mdRwd.triggerVcEvent({"type": "redTap"});
+	    $(document).hammer().on("tap", "#rgbContainer #red", function(e) {
+		rgbContainerState.logNumber++;
+		$("#rgbContainer #red .events").prepend('<div class="event">#' + rgbContainerState.logNumber + ' Local click/tap</div>');
+		if(mdRwd && mdRwd.getMyLayout().id == "control"){
+		    var tapColorAreaEvent = {
+			"type": "tapColorArea", 
+			"eventData": {
+			    "colorArea": "red"
+			}
+		    };
+		    mdRwd.triggerVcEvent(tapColorAreaEvent);
+		}
 	    });
 
 	    $(document).hammer().on("tap", "#rgbContainer #green", function() {
-		logNumber++;
-		$("#rgbContainer #green .events").prepend('<div class="event">#' + logNumber + ' Local click/tap</div>');
-		if(mdRwd && mdRwd.getMyLayout().id == "control") mdRwd.triggerVcEvent({"type": "greenTap"});
+		rgbContainerState.logNumber++;
+		$("#rgbContainer #green .events").prepend('<div class="event">#' + rgbContainerState.logNumber + ' Local click/tap</div>');
+		if(mdRwd && mdRwd.getMyLayout().id == "control"){
+		    var tapColorAreaEvent = {
+			"type": "tapColorArea", 
+			"eventData": {
+			    "colorArea": "green"
+			}
+		    };
+		    mdRwd.triggerVcEvent(tapColorAreaEvent);
+		}
 	    });
 	    
 	    $(document).hammer().on("tap", "#rgbContainer #blue", function() {
-		logNumber++;
-		$("#rgbContainer #blue .events").prepend('<div class="event">#' + logNumber + ' Local click/tap</div>');
-		if(mdRwd && mdRwd.getMyLayout().id == "control") mdRwd.triggerVcEvent({"type": "blueTap"});
+		rgbContainerState.logNumber++;
+		$("#rgbContainer #blue .events").prepend('<div class="event">#' + rgbContainerState.logNumber + ' Local click/tap</div>');
+		if(mdRwd && mdRwd.getMyLayout().id == "control"){
+		    var tapColorAreaEvent = {
+			"type": "tapColorArea", 
+			"eventData": {
+			    "colorArea": "blue"
+			}
+		    };
+		    mdRwd.triggerVcEvent(tapColorAreaEvent);
+		}
 	    });
 
-	    $(document).hammer({"drag_max_touches" : 0, "prevent_default": true}).on("touch", "#userTouchpad", function() {
-		if (mdRwd) mdRwd.triggerVcEvent({"type": "moveUserStart"});
-		moveUserInterval();
-		timer = setInterval("moveUserInterval()", 100);
+	    $(document).hammer({"drag_max_touches" : 0}).on("touch", "#userTouchpad", function() {
+		if (mdRwd && mdRwd.getMyLayout().id == "control"){
+		    mdRwd.triggerVcEvent({"type": "moveUserStart"});
+		    moveUserInterval();
+		    timer = setInterval("moveUserInterval()", 100);
+		}
 	    });
 
-	    $(document).hammer({"drag_max_touches" : 0, "prevent_default": true}).on("drag", "#userTouchpad", function(ev) { 
-		moveX = ev.gesture.deltaX;
+	    $(document).hammer({"drag_max_touches" : 0}).on("drag", "#userTouchpad", function(ev) { 
+		ev.preventDefault();
+		leftOffset = ev.gesture.deltaX;
 	    });
 
-	    $(document).hammer({"drag_max_touches" : 0, "prevent_default": true}).on("release", "#userTouchpad", function() {
+	    $(document).hammer({"drag_max_touches" : 0}).on("release", "#userTouchpad", function() {
 		clearInterval(timer); 
 	    });
 	   	    
@@ -164,55 +193,59 @@
 	function monoDevice() { 
 	    if(mdRwd.getMyLayout().id == "control") {
 		$(".colorArea").show();
-	    }else{
-		$("#connectLabel").html("Click on connect button to pair a device.");
-		$('.genericUser').remove();
-		usersData = {};
+	    }else if(mdRwd.getMyLayout().id == "main"){
+		$("#connectLabel .verticalCenter").html("Click on connect button to pair a device");
 	    }
 	}
 
 	function newUser(e) { 
-	    $("#connectLabel").html("Pair a device using this ID: " + e.vcId); 
-	    usersData[e.client.id] = {"previousColorArea": "red", "previousLeftOffset": 0, "userColor": '#' + Math.floor(Math.random() * 16777215).toString(16)};
-	    $("#usersBar").append('<div id="user' + e.client.id + '" class="genericUser"></div>');
-	    $('#user' + e.client.id).css("border-bottom-color", usersData[e.client.id].userColor);
-	    usersBarState.usersBarHTML = $("#usersBar").html();
-	    usersBarState.usersData = usersData;
+	    if(mdRwd.getMyLayout().id == "main" && e.client.layout.id == "control"){
+		$("#connectLabel .verticalCenter").html("Pair a device using this ID: " + e.vcId); 
+		var color = 'rgb(' +    (Math.floor((256-149)*Math.random()) + 150) + ',' + 
+					(Math.floor((256-149)*Math.random()) + 150) + ',' + 
+					(Math.floor((256-149)*Math.random()) + 150) + ')';
+		usersData[e.client.id] = {"previousColorArea": "red", "previousLeftOffset": 0, "userColor": color};
+		$("#usersBar").append('<div id="user' + e.client.id + '" class="genericUser"></div>');
+		$('#user' + e.client.id).css({"background-color": usersData[e.client.id].userColor});
+		usersBarState.usersBarHTML = $("#usersBar").html();
+		usersBarState.usersData = usersData;
+		mdRwd.setVcCompState("usersBar", usersBarState);
+	    }else if(mdRwd.getMyLayout().id == "main" && e.client.layout.id == "main" && mdRwd.getMyId() == e.client.id){
+		$("#connectLabel .verticalCenter").html("Pair a device using this ID: " + e.vcId); 
+		usersBarState = mdRwd.getVcCompState("usersBar");
+		$("#usersBar").html(usersBarState.usersBarHTML);
+		usersData =  usersBarState.usersData;
+		rgbContainerState = mdRwd.getVcCompState("rgbContainer");
+		$("#rgbContainer").html(rgbContainerState.rgbContainerHTML);
+	    }
 	}
 
 	function removeUser(e) {
 	    delete usersData[e.client.id];
 	    $('#user' + e.client.id).remove(); 
 	    if ($.isEmptyObject(usersData)) {
-		$("#connectLabel").html("All devices are disconnected. Pair a device using the following code: " + e.vcId); //show this message
+		$("#connectLabel .verticalCenter").html("All control devices are disconnected. Pair a device using this ID: " + e.vcId); //show this message
 	    }
 	}
 
-	function addRedTapLog(e) {
-	    logNumber++;
-	    $("#rgbContainer #red .events").prepend('<div class="event" style="border-color:' + usersData[e.client.id].userColor + '">#' + logNumber + ' Remote tap from User ' + e.client.id + '</div>');
+	function addTapLog(e) {
+	    rgbContainerState.logNumber++;
+	    $("#rgbContainer #" + e.eventData.colorArea + " .events").prepend('<div class="event" style="border-color:' + usersData[e.client.id].userColor + '">#' + rgbContainerState.logNumber + ' Remote tap from User ' + e.client.id + '</div>');
 	    rgbContainerState.rgbContainerHTML = $("#rgbContainer").html();
+	    mdRwd.setVcCompState("rgbContainer", rgbContainerState);
 	}
-
-	function addGreenTapLog(e) {
-	    logNumber++;
-	    $("#rgbContainer #green .events").prepend('<div class="event" style="border-color:' + usersData[e.client.id].userColor + '">#' + logNumber + ' Remote tap from User ' + e.client.id + '</div>');
-	    rgbContainerState.rgbContainerHTML = $("#rgbContainer").html();
-	}
-
-	function addBlueTapLog(e) {
-	    logNumber++;
-	    $("#rgbContainer #blue .events").prepend('<div class="event" style="border-color:' + usersData[e.client.id].userColor + '">#' + logNumber + ' Remote tap from User ' + e.client.id + '</div>');
-	    rgbContainerState.rgbContainerHTML = $("#rgbContainer").html();
+	
+	function zoom(e){
+	    $("body").css({"font-size": e.eventData.scale*100 + "%" });
 	}
 
 	function moveUser(e) {
 	    userId = e.client.id;
-	    userWidh = $('#user' + e.client.id).width();
+	    userWidh = $('#user' + e.client.id).outerWidth();
 	    windowWidth = $(window).width();
-	    moveX = e.eventData.moveX;
+	    leftOffset = e.eventData.leftOffset;
 
-	    userLeftOffset = parseInt(usersData[userId].previousLeftOffset) + parseInt(moveX * sensibility);
+	    userLeftOffset = parseInt(usersData[userId].previousLeftOffset) + parseInt(leftOffset * moveUserSensibility);
 	    userLeftOffset = userLeftOffset <= 0 ? 0 : (userLeftOffset >= (windowWidth - userWidh) ? (windowWidth - userWidh) : userLeftOffset);
 	    if (userLeftOffset <= windowWidth / 3 - userWidh / 2) {
 		changeRemoteColorArea("red", userId); 
@@ -225,26 +258,27 @@
 	    $('#user' + e.client.id).css("left", userLeftOffset + "px");
 	    usersBarState.usersBarHTML = $("#usersBar").html();
 	    usersBarState.usersData = usersData;
+	    mdRwd.setVcCompState("usersBar", usersBarState);
 	}
 	
 	function changeRemoteColorArea(colorArea, userId) {
 	    if(colorArea != usersData[userId].previousColorArea){
 		var ev = {"type": "changeRemoteColorArea", "eventData": {"colorArea": colorArea, "userId": userId}};
-		if (mdRwd) mdRwd.triggerVcEvent(ev);
+		mdRwd.triggerVcEvent(ev);
 		usersData[userId].previousColorArea = colorArea;
 	    }
 	}
 
 	function moveUserInterval() {
-	    if (moveX != previousMoveX){
-		var ev = {"type": "moveUser", "eventData": {"moveX": moveX}};
-		if (mdRwd) mdRwd.triggerVcEvent(ev); 
-		previousMoveX = moveX;
+	    if (leftOffset != previousLeftOffset){
+		var ev = {"type": "moveUser", "eventData": {"leftOffset": leftOffset}};
+		mdRwd.triggerVcEvent(ev); 
+		previousLeftOffset = leftOffset;
 	    }
 	}
 	
 	function changeLocalColorArea(e) {
-	    if (e.eventData.userId == mdRwd.getMyId()) {
+	    if (mdRwd.getMyId() == e.eventData.userId) {
 		$(".colorArea").hide();
 		$("#"+e.eventData.colorArea).show();
 	    }
@@ -256,18 +290,24 @@
     </script>
     </head>
     <body>
+	<!-- component -->
 	<div id="connectBar">
-	    <div id="connectLabel">Click on the connect button to pair a device.</div>
-	    <div id="connect">CONNECT</div>
+	    <div id="connectLabel"><div class="verticalCenter">Click on the connect button to pair a device</div></div>
+	    <div id="connect"><div class="verticalCenter">CONNECT</div></div>
 	</div>
+	<!-- component -->
 	<div id="usersBar"></div>
-	<div id="userTouchpad">
-	    <img src="img/touchpad.png"/>
-	</div>
+	<!-- component -->
+	<div id="userTouchpad"><div class="verticalCenter"><img src="img/touchpad.png"/></div></div>
+	<!-- component -->
 	<div id="rgbContainer">
-	    <div id="red" class="colorArea"><div class="events"></div><div class="clickHere">CLICK OR TAP HERE</div></div>
-	    <div id="green" class="colorArea"><div class="events"></div><div class="clickHere">CLICK OR TAP HERE</div></div>
-	    <div id="blue" class="colorArea"><div class="events"></div><div class="clickHere">CLICK OR TAP HERE</div></div>
+	    <div id="red" class="colorArea"><div class="events"></div><div class="verticalCenter clickHere">CLICK OR TAP HERE</div></div>
+	    <div id="green" class="colorArea"><div class="events"></div><div class="verticalCenter clickHere">CLICK OR TAP HERE</div></div>
+	    <div id="blue" class="colorArea"><div class="events"></div><div class="verticalCenter clickHere">CLICK OR TAP HERE</div></div>
 	</div>
+	<!-- component -->
+	<div id="layoutMainLabel"><div class="verticalCenter">LAYOUT - MAIN</div></div>
+	<!-- component -->
+	<div id="layoutControlLabel"><div class="verticalCenter">LAYOUT - CONTROL</div></div>
     </body>
 </html>
