@@ -6,7 +6,7 @@ CHANGELOG - Release v0.3.4 (2014-05-10)
 
 #### Bug Fixes
 
-* **jquery.mdRwd.js:** fixes and improvements ([bb4b78c](https://github.com/sipy/mdRwd/commit/bb4b78cabf962b4fd69eab04cad9eb0ca2b9fc92))
+* **jquery.mdRwd.js:** fixes and improvements ([b2a8922](https://github.com/sipy/mdRwd/commit/b2a8922d34b253064e4d371e09d0919edacc6ddd))
 
 <a name="v0.3.3"></a>
 ### v0.3.3 (2014-05-10)
