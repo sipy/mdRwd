@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+	<title>Demo - mdRwd</title>
+	<meta charset="utf-8"/>
+        <meta name="robots" content="noodp,noydir"/>
+        <meta name="apple-mobile-web-app-title" content="Demo - mdRwd"/>
+        <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+        <meta name="viewport" content="width=device-width, height=device-height, user-scalable=0, initial-scale=1, maximum-scale=1, minimum-scale=1"/>        
+	<meta name="apple-mobile-web-app-capable" content="yes"/> 
+        <meta property="og:title" content="Demo - mdRwd" />
+        <meta property="og:description" content="A framework for development of Web applications partitioned in different communicating devices." />
+        <meta property="og:url" content="http://www.mdrwd.org/" />
+        <meta property="og:image" content="http://www.mdrwd.org/mdRwd/lib/img/mdRwdLogo500.png" />
+	<meta name="keywords" content="mdRwd, rwd, responsive web design, multi-device, demo"/>
+	<meta name="description" content="A framework for development of Web applications partitioned in different communicating devices."/>
+        <link rel="apple-touch-icon-precomposed" href="http://www.mdrwd.org/mdRwd/lib/img/mdRwdLogo500.png"/>  
+        <link rel="img_src" href="http://www.mdrwd.org/mdRwd/lib/img/mdRwdLogo500.png"/>
+        <link rel="icon" href="http://www.mdrwd.org/mdRwd/lib/img/favicon.ico" type="image/x-icon"/>
+	<style>
+	    html, body{
+		height: 100%;
+		margin: 0;
+		width: 100%;
+		font-family: Georgia, sans-serif;
+		font-size: 18px;
+		background-image: url('http://www.mdRwd.org/img/back.png');
+		font-family: "Open sans";
+		color: white;
+	    }
+	    header{
+		width: 100%;
+		background-color: rgba(0, 0, 0, 0.95);
+		height: 50px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+	    }
+	    footer{
+		font-family: 'Open Sans', sans-serif;
+		text-align: center;
+		color: #fff;
+		height: 22px;
+		width: 100%;
+		background: #000;
+		padding: 5px 0;
+		font-size: 13px;
+		line-height: 22px;
+	    }
+	    .mdRwd{
+		font-family: "Open sans condensed";
+		font-weight: bold;
+		font-size: 1.2em;
+	    }
+	    .md{
+		color:#ffffff;
+	    }
+	    .rwd{
+		color:#2FCC71;
+	    }
+	    a{
+		color: #2fcc71; 
+		text-decoration: none;
+	    }
+	    a:hover{
+		color: #CA6883; 
+	    }
+	    #logo {
+		display: block;
+		padding-left: 10px;
+		line-height: 45px;
+		float: left;
+		height: 50px;
+	    }
+	    #logo img {
+		height: 35px;
+		vertical-align: middle;
+	    }
+	    #main{
+		height: 100%;
+		width: 100%;
+	    }
+	    #logoImg{
+		opacity: 0.2;
+		position: absolute;
+		left: 50%;
+		margin-left: -250px;
+		top: 50%;
+		margin-top: -89px;
+	    }
+	    #demoList{
+		padding: 40px;
+	    }
+	    #demoList ul, #demoList h1, #demoList h2 {
+		padding: 0px;
+		margin: 0px;
+	    }
+	    #demoList h1 {
+		font-weight: normal;
+		font-size: 40px;
+	    }
+	    #demoList h2 {
+		font-weight: normal;
+		font-size: 30px;
+	    }
+	</style>
+	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+            $(window).resize(function(){
+                $("#main").css({"height": ($(window).height()-83)+"px" });
+                $(".tab").css({"height": ($(window).height()-182)+"px" });
+            });
+	    $(document).ready(function(){
+		$("#main").css({"height": ($(window).height()-83)+"px" });
+                $(".tab").css({"height": ($(window).height()-182)+"px" });
+	    });
+	</script>
+    </head>
+    <body>
+	<header id="header">
+	    <!-- Logo -->
+            <a href="/" id="logo"><img src="http://www.mdRwd.org/mdRwd/lib/img/mdRwdLogoSimple500.png" alt="" /></a>
+	</header>
+	<section id="main">
+	    <div id="demoList">
+		<h1>Demo</h1>
+		<div>
+		    We've developed some demos to illustrate most of the 
+		    <span class="mdRwd"><span class="md">md</span><span class="rwd">Rwd</span></span> 
+		    framework capabilities and potential.
+		</div>
+		<br/>
+		<h2><a href="sample/">Sample</a></h2>
+		<div>
+		    Basic multi-user, remote control demo to discover 
+		    <span class="mdRwd"><span class="md">md</span><span class="rwd">Rwd</span></span> 
+		    main capabilities.<br/>Understanding this demo will allow you to develop new kind of powerful 
+		    multi-user Web applications.<br/>
+		    Explore the Sample demo <a href="sample/">here</a>.
+		</div>
+		<br/>
+		<h2><a href="maze/">Maze</a></h2>
+		<div>
+		    Maze is a simple multi-player game. The aim of the game is to get out of the maze first.<br/>
+		    You can use many desktops and many smartphones for playing this game.<br/>
+		    Explore the Maze demo <a href="maze/">here</a>.
+		</div>
+	    </div>
+	    <img id="logoImg" src="http://www.mdRwd.org/mdRwd/lib/img/mdRwdLogo500.png"/>
+	</section>
+	<footer>&copy; 2014 <span class="mdRwd"><span class="md">md</span><span class="rwd">Rwd</span></span>. All rights reserved.</footer>
+    </body>
+</html>
