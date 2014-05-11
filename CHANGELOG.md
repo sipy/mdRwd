@@ -4,7 +4,7 @@ CHANGELOG - Release v0.3.5 (2014-05-12)
 <a name="v0.3.5"></a>
 ### v0.3.5 (2014-05-12)
 
-#### General improvements
+#### Generic improvements
 
 <a name="v0.3.4"></a>
 ### v0.3.4 (2014-05-10)
