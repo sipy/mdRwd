@@ -43,7 +43,7 @@
     define("WS_MAX_CLIENTS_PER_IP", WS_MAX_VCS * WS_MAX_VC_CLIENTS_PER_IP + 1);
     //Number of characters for the virtual channels ids.
     define("NUM_VC_ID_CHARS", 4);
-    //WebSoccket server allowed client origins. Only listed origins will be allowed to connect to the WebSocket server.
+    //WebSocket server allowed client origins. Only listed client origins will be allowed to connect to the WebSocket server.
     $ALLOWED_ORIGINS = array(
         "http://".WS_SERVER_IP,
         "http://mdrwd.org", "http://www.mdrwd.org",
