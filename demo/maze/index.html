@@ -4,7 +4,7 @@
 	<title>Maze - mdRwd</title>
 	<meta charset="utf-8"/>
         <meta name="robots" content="noodp, noydir"/>
-        <meta name="apple-mobile-web-app-title" content="Maze"/>
+        <meta name="apple-mobile-web-app-title" content="Maze - mdRwd"/>
         <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/> 
 	<meta name="viewport" content="width=device-width, height=device-height, user-scalable=0, initial-scale=1, maximum-scale=1, minimum-scale=1"/>        
@@ -78,7 +78,6 @@
 		    "components": { //application components. If stateful=true, initial JSON state could be set inside the "component[idComponent].state" property.
 			"maze": {"selector":"#maze"}, //maze game component.
 			"playerControl": {"selector":"#playerControl"}, //remote touch control player component.
-			"footer": {"selector":"#footer"} //footer component
 		    },
 		    "layouts": { //application layouts
 			"game": { //game layout
@@ -88,7 +87,7 @@
 			    "mdRwdOnMonoDeviceMode": function() { //callback called when the application switches from multi-device mode to mono-device mode (when disconnection from a virtual channel occur)
 				game_setGameMode("monoDevice"); //set game mode to mono-device
 			    },
-			    "components": "maze, footer", //set of components that form the game layout (chosen from defined components above)
+			    "components": "maze", //set of components that form the game layout (chosen from defined components above)
 			    "devices": "desktop, tablet", //all supported devices by the game layout (only listed devices will display game layout)
 			    "html":{ //mdRwd window layout button html (it will be displayed in a layout buttons list if the current device supports many layouts)
 				"name": "Maze", //name
@@ -121,7 +120,7 @@
 			    }
 			},
 			"control": { //control layout
-			    "components": "playerControl, footer", //set of components that form the control layout (chosen from defined components above)
+			    "components": "playerControl", //set of components that form the control layout (chosen from defined components above)
 			    "devices": "smartphone, tablet", //all supported devices by the control layout (only listed devices will display control layout)
 			    "connectionTypes": "connVc", //layout supported server connections (game layout can only to another virtual channel)
 			    "html":{ //mdRwd window layout button html (it will be displayed in a layout buttons list if the current device supports many layouts)
@@ -199,7 +198,5 @@
 		<img src="img/touchpad.png" id="touchpadImg"/>
 	    </div>
 	</div>
-	<!-- footer component -->
-	<div id="footer">&copy; 2014 mdRwd. All rights reserved.</div>
     </body>
 </html>
