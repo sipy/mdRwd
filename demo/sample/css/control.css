@@ -13,6 +13,7 @@ html, body{
     margin: 0px;
     height: 100%;
     padding: 0px;
+    width: 100%;
 }
 #connect .label{
     
@@ -24,6 +25,7 @@ html, body{
 }
 #red, #green, #blue{
     height: 100%;
+    width: 100%;
 }
 #userTouchpad img{
     vertical-align: middle;
