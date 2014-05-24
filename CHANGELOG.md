@@ -40,15 +40,15 @@ CHANGELOG - Release v0.3.5 (2014-05-12)
 
 #### Features
 * **jquery.mdRwd.js:** added new public method, layout property, mdRwd event and improvements ([4248e57](https://github.com/sipy/mdRwd/commit/4248e57b9c79eeaebbae996c7128c8b78f6f9f5d))
-    * "hidden" - layout property
-    * "changeLayout" - mdRwd event
-    * "getMyAppMode()" - public method
+    * `hidden` - layout property
+    * `changeLayout` - mdRwd event
+    * `getMyAppMode()` - public method
 * **server.php:** added  mdRwd event and improvements ([87e26e3](https://github.com/sipy/mdRwd/commit/87e26e3754ae113e8eecf574ad1f3ce122d8273d))
-    * "changeLayout" - mdRwd event
+    * `changeLayout` - mdRwd event
 
 #### Deprecated
 * **jquery.mdRwd.js:** ([4248e57](https://github.com/sipy/mdRwd/commit/4248e57b9c79eeaebbae996c7128c8b78f6f9f5d))
-    * "mdRwdChangeLayout()" - mdRwd callback
+    * `mdRwdChangeLayout()` - mdRwd callback
 
 <a name="v0.2.1"></a>
 ### v0.2.1 (2014-05-03)
@@ -63,12 +63,12 @@ CHANGELOG - Release v0.3.5 (2014-05-12)
 
 #### Features
 * **jquery.mdRwd.js:** added new public methods and improvements ([c41b5dc](https://github.com/sipy/mdRwd/commit/c41b5dc06e5f7021988c78443a56adc2eb774b1d))
-    * "maxInstances" - layout property
-    * "destroy()" - public method
-    * "getMyId()" - public method
-    * "getMyVc()" - public method
-    * "getMyDevice()" - public method
-    * "getMyLayout()" - public method
+    * `maxInstances` - layout property
+    * `destroy()` - public method
+    * `getMyId()` - public method
+    * `getMyVc()` - public method
+    * `getMyDevice()` - public method
+    * `getMyLayout()` - public method
 * **server.php:** added max vc layout instances support ([afc57a3](https://github.com/sipy/mdRwd/commit/afc57a3fd89864292ba486f31bdb4b6ed414a1ec))
 * **server.config.php:** added WS_STATUS_MAX_VC_LAYOUTS status code ([4941679](https://github.com/sipy/mdRwd/commit/4941679565a8ed78cad78f95e5b247df885ceaf5))
 
