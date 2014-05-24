@@ -4,14 +4,13 @@ mdRwd
 
 A framework for development of Web applications partitioned in different communicating devices.
 
-<ul>
-<li><a href="https://github.com/sipy/mdRwd/wiki/Get-Started/">Get Started</a></li>
-<li><a href="http://www.mdrwd.org/api/">Api</a></a></li>
-<li><a href="http://www.mdrwd.org/mdRwd/demo/">Demo</a></a></li>
-<li><a href="https://github.com/sipy/mdRwd/blob/master/CHANGELOG.md">Changelog</a></a></li>
-</ul>
+* ([Get Started](https://github.com/sipy/mdRwd/wiki/Get-Started/))
+* ([Api](http://www.mdrwd.org/api/))
+* ([Demo](http://www.mdrwd.org/mdRwd/demo/))
+* ([Changelog](https://github.com/sipy/mdRwd/blob/master/CHANGELOG.md))
 
-<a href="http://www.mdrwd.org" target="_blank">www.mdRwd.org</a>
+
+([www.mdRwd.org](http://www.mdrwd.org))
 
 ##License
-The <strong>mdRwd</strong> framework is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007 (<a href="http://www.gnu.org/licenses/agpl-3.0.html">Affero GPL</a>).
+The **mdRwd** framework is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007 (([Affero GPL](http://www.gnu.org/licenses/agpl-3.0.html))).
