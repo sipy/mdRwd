@@ -1,6 +1,6 @@
 {
     "name": "mdRwd",
-    "version": "0.3.6",
+    "version": "0.4.0",
     "title": "Multi-Device Responsive Web Design",
     "description": "A framework for development of Web applications partitioned in different communicating devices",
     "keywords": [
