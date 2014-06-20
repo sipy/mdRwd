@@ -6,7 +6,7 @@ CHANGELOG - Release v0.4.0 (2014-06-20)
 
 #### Bug Fixes
 
-* **mdRwd.jquery.json:**
+* **mdRwd.jquery.json**
 
 <a name="v0.3.8"></a>
 ### v0.3.8 (2014-06-20)
