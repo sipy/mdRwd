@@ -1,0 +1,35 @@
+{
+    "name": "mdRwd",
+    "version": "0.3.6",
+    "title": "Multi-Device Responsive Web Design",
+    "description": "A framework for development of Web applications partitioned in different communicating devices",
+    "keywords": [
+        "mdRwd", "rwd", "responsive web design", "multi-device"
+    ],
+    "author": {
+        "name": "Simeon Ivaylov Petrov, Alessio Bellino, Flavio De Paoli"
+    },
+    "licenses": [
+        {
+            "type": "AGPL",
+            "url": "https://github.com/sipy/mdRwd/blob/master/LICENSE"
+        }
+    ],
+    "maintainers": [
+        {
+            "name": "Simeon Ivaylov Petrov",
+            "email": "s.petrov@campus.unimib.it",
+            "url": "https://github.com/sipy"
+        },
+        {
+            "name": "Alessio Bellino",
+            "email": "bellino@disco.unimib.it",
+            "url": "https://github.com/bellinux"
+        }
+    ],
+    "bugs": "https://github.com/sipy/mdRwd/issues",
+    "homepage": "http://www.mdrwd.org",
+    "demo": "http://www.mdrwd.org/mdRwd/demo",
+    "docs": "https://github.com/sipy/mdRwd/wiki",
+    "download": "https://github.com/sipy/mdRwd/archive/master.zip"
+}

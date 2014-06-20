@@ -13,4 +13,4 @@ A framework for development of Web applications partitioned in different communi
 [www.mdRwd.org](http://www.mdrwd.org)
 
 ##License
-The **mdRwd** framework is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007 ([Affero GPL](http://www.gnu.org/licenses/agpl-3.0.html)).
+The **mdRwd** framework is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007 ([AGPL](http://www.gnu.org/licenses/agpl-3.0.html)).
