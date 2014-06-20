@@ -1,5 +1,12 @@
-CHANGELOG - Release v0.3.7 (2014-06-20)
+CHANGELOG - Release v0.3.8 (2014-06-20)
 =====
+
+<a name="v0.3.8"></a>
+### v0.3.8 (2014-06-20)
+
+#### Bug Fixes
+
+* **mdRwd.jquery.json:** fixed invalid manifest keyword ([5b175b2](https://github.com/sipy/mdRwd/commit/5b175b220c465ff2afa501a7dc982945a33ba91a))
 
 <a name="v0.3.7"></a>
 ### v0.3.7 (2014-06-20)
