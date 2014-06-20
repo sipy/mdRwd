@@ -1,5 +1,10 @@
-CHANGELOG - Release v0.3.5 (2014-05-12)
+CHANGELOG - Release v0.3.6 (2014-06-20)
 =====
+
+<a name="v0.3.6"></a>
+### v0.3.6 (2014-06-20)
+
+#### Added **mdRwd.jquery.json** manifest
 
 <a name="v0.3.5"></a>
 ### v0.3.5 (2014-05-12)
