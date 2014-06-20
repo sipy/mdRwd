@@ -6,7 +6,7 @@ CHANGELOG - Release v0.3.7 (2014-06-20)
 
 #### Fixes
 
-* **mdRwd.jquery.json:** added dependencies ([4f1f928](https://github.com/sipy/mdRwd/commit/4f1f928f9a9d26cc478a2f3386ccc03aeae6b104))
+* **mdRwd.jquery.json:** added dependencies ([cfa9a35](https://github.com/sipy/mdRwd/commit/cfa9a3528bd749c3257b829f1d0eb97a0e093fd8))
 
 <a name="v0.3.6"></a>
 ### v0.3.6 (2014-06-20)
