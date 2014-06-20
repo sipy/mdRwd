@@ -4,7 +4,7 @@
     "title": "Multi-Device Responsive Web Design",
     "description": "A framework for development of Web applications partitioned in different communicating devices",
     "keywords": [
-        "mdRwd", "rwd", "responsive web design", "multi-device"
+        "mdRwd", "rwd", "responsive", "multi-device"
     ],
     "author": {
         "name": "Simeon Ivaylov Petrov, Alessio Bellino, Flavio De Paoli"
