@@ -27,6 +27,9 @@
             "url": "https://github.com/bellinux"
         }
     ],
+    "dependencies": {
+        "jquery": ">=1.9"
+    },
     "bugs": "https://github.com/sipy/mdRwd/issues",
     "homepage": "http://www.mdrwd.org",
     "demo": "http://www.mdrwd.org/mdRwd/demo",
