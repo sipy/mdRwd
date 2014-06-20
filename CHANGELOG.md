@@ -1,5 +1,12 @@
-CHANGELOG - Release v0.3.8 (2014-06-20)
+CHANGELOG - Release v0.4.0 (2014-06-20)
 =====
+
+<a name="v0.4.0"></a>
+### v0.4.0 (2014-06-20)
+
+#### Bug Fixes
+
+* **mdRwd.jquery.json:**
 
 <a name="v0.3.8"></a>
 ### v0.3.8 (2014-06-20)
