@@ -1,3 +1,5 @@
+This project has moved to => [partify](https://github.com/sipy/partify)
+
 mdRwd
 =====
 ##Multi-Device Responsive Web Design
